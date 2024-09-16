@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useContext} from 'react';
 import './App.css';
+import {observer} from "mobx-react";
+import {RouterContext, RouterView} from 'mobx-state-router';
+import {initRouter} from './Stores/RouterStore';
+import {ProductStore} from "./Stores/ProductStore";
+import Cartstore from "./Stores/CartStore";
+import {UserStore} from "./Stores/UserStore";
+import {CategoryStore} from "./Stores/CategoryStore";
+import Cart from "./Pages/Cart";
+import {Home} from "./Pages/Home";
+import {NewProduct} from './Pages/NewProduct';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+
+const productStore = new ProductStore();
+const userStore = new UserStore();
+const categoryStore = new CategoryStore();
+const cartStore = new Cartstore();
+
+export const viewMap = {
+    CartPage: <Cart cartStore={cartStore} userStore={userStore}/>,
+    HomePage: <Home productStore={productStore} userStore={userStore} categoryStore={categoryStore}
+                    cartStore={cartStore}/>,
+    NewProductPage: <NewProduct productStore ={productStore} categoryStore = {categoryStore} />
+
+};
+
+const App = observer(() => {
+
+    const routerStore = initRouter();
+    return (
+        <RouterContext.Provider value={routerStore}>
+                <RouterView viewMap={viewMap}/>
+        </RouterContext.Provider>
+    );
+});
 
 export default App;
