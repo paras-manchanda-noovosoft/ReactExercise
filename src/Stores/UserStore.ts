@@ -1,4 +1,4 @@
-import { action, observable, makeAutoObservable } from "mobx";
+import {action, observable, makeAutoObservable} from "mobx";
 
 export class UserStore {
     @observable user: string = "";
@@ -8,7 +8,8 @@ export class UserStore {
         makeAutoObservable(this);
     }
 
-    @action async setUserDetails() {
+    @action
+    async setUserDetails() {
         this.loading = true;
         try {
             const userData = await new Promise(resolve =>

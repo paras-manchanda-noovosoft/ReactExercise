@@ -1,7 +1,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import CategoryDropDown from '../Components/CategoryDropDown';
-import {RootContext} from "../context";
+import {RootContext} from "../context/RouterContext";
 import {FormStore} from "../Stores/FormStore";
 import {ProductStore} from "../Stores/ProductStore";
 import {CategoryStore} from "../Stores/CategoryStore";
@@ -32,7 +32,6 @@ class Product {
 }
 
 
-
 @observer
 export class NewProduct extends React.Component <NewProductProps, NewProductState> {
 
@@ -55,19 +54,18 @@ export class NewProduct extends React.Component <NewProductProps, NewProductStat
             const product = productStore && productStore.getProductById(id);
             if (product) {
                 this.formStore.setData(product);
-            }
-            else{
-                this.isEditMode=false;
+            } else {
+                this.isEditMode = false;
                 alert('Product Id does not Exist !! So redirected to New Product ');
             }
         }
         this.setValidateFields();
     }
 
-    @action setValidateFields(){
+    @action setValidateFields() {
         this.formStore.validateFields = {
             ...this.formStore.validateFields,
-            "description" : true
+            "description": true
         }
     }
 
@@ -80,7 +78,7 @@ export class NewProduct extends React.Component <NewProductProps, NewProductStat
                         this.props.productStore.updateProduct(this.formStore.formData);
                     } else {
                         let localId = JSON.parse(localStorage.getItem('id') || '195');
-                        this.formStore.setInputFieldValue("id",+localId);
+                        this.formStore.setInputFieldValue("id", +localId);
                         localStorage.setItem('id', JSON.stringify(+localId + 1));
                         this.props.productStore.setAddProduct(this.formStore.formData);
                     }
@@ -92,7 +90,7 @@ export class NewProduct extends React.Component <NewProductProps, NewProductStat
         }
     };
     handleCategoryChange = (category: string): void => {
-        this.formStore.setInputFieldValue("category",category);
+        this.formStore.setInputFieldValue("category", category);
     };
 
     render() {
@@ -100,71 +98,65 @@ export class NewProduct extends React.Component <NewProductProps, NewProductStat
             <>
                 <div className="add-cart-page">
                     <h2>{this.isEditMode ? 'Edit Product' : 'Add a New Product'}</h2>
-                    <form  onSubmit={(e)=> e.preventDefault()} className="add-form">
-                        <FieldComponent
-                            formStore={this.formStore}
-                            name="product_name"
-                            label="Name"
-                            type="text"
-                            required = {true}
-                        />
-                        <div>
-                            <label htmlFor="category">Category:</label>
-                            <CategoryDropDown
-                                categoryData={this.props.categoryStore?.categoryList || []}
-                                onSelect={this.handleCategoryChange}
-                                value={this.formStore.data["category"]}
+                    <div className="add-form">
+                        <FormComponent formStore={this.formStore} onSubmit={this.handleSubmit}
+                                       showResetButton={true}>
+                            <FieldComponent
+                                formStore={this.formStore}
+                                name="product_name"
+                                label="Name"
+                                type="text"
+                                required={true}
                             />
-                            {this.formStore.errors.category && (
-                                <p className="red-color">{this.formStore.errors.category}</p>
-                            )}
-                        </div>
-                        <FieldComponent
-                            formStore={this.formStore}
-                            name="price"
-                            label="price"
-                            type="text"
-                            required = {true}
-                        />
+                            <div>
+                                <label htmlFor="category">Category:</label>
+                                <CategoryDropDown
+                                    categoryData={this.props.categoryStore?.categoryList || []}
+                                    onSelect={this.handleCategoryChange}
+                                    value={this.formStore.data["category"]}
+                                />
+                                {this.formStore.errors.category && (
+                                    <p className="red-color">{this.formStore.errors.category}</p>
+                                )}
+                            </div>
+                            <FieldComponent
+                                formStore={this.formStore}
+                                name="price"
+                                label="price"
+                                type="number"
+                                required={true}
+                            />
 
-                        <FieldComponent
+                            <FieldComponent
                                 formStore={this.formStore}
                                 name="discount"
                                 label="discount"
                                 type="number"
-                                required = {true}
-                        />
-
-                        <div>
-                            <label htmlFor="description">Description: </label>
-                            <textarea
-                                style={{
-                                    textAlign: 'left',
-                                    verticalAlign: 'top',
-                                    wordWrap: 'break-word',
-                                    width: "93%",
-                                    height: "200px",
-                                    padding: "20px",
-                                    fontSize: "20px"
-                                }}
-                                name="description"
-                                value={this.formStore.data["description"]}
-                                onChange={(e) => this.formStore.setInputFieldValue(e.target.name,e.target.value)}
+                                required={true}
                             />
-                            {this.formStore.errors.description && (
-                                <p className="red-color">{this.formStore.errors.description}</p>
-                            )}
-                        </div>
-                        <div>
-                            <FormComponent formStore={this.formStore} onSubmit={this.handleSubmit} showResetButton={true}/>
-                            {/*<input*/}
-                            {/*    type="submit"*/}
-                            {/*    value={this.isEditMode ? 'Update Product' : 'Add Product'}*/}
-                            {/*/>*/}
-                        </div>
 
-
-                    </form>
+                            <div>
+                                <label htmlFor="description">Description: </label>
+                                <textarea
+                                    style={{
+                                        textAlign: 'left',
+                                        verticalAlign: 'top',
+                                        wordWrap: 'break-word',
+                                        width: "93%",
+                                        height: "200px",
+                                        padding: "20px",
+                                        fontSize: "20px"
+                                    }}
+                                    name="description"
+                                    value={this.formStore.data["description"]}
+                                    onChange={(e) => this.formStore.setInputFieldValue(e.target.name, e.target.value)}
+                                />
+                                {this.formStore.errors.description && (
+                                    <p className="red-color">{this.formStore.errors.description}</p>
+                                )}
+                            </div>
+                        </FormComponent>
+                    </div>
                 </div>
             </>
         )

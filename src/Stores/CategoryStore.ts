@@ -1,4 +1,4 @@
-import { action, makeAutoObservable, observable } from "mobx";
+import {action, makeAutoObservable, observable} from "mobx";
 
 export class CategoryStore {
     @observable categoryList: string[] = [];

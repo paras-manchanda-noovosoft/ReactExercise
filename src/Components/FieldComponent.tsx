@@ -1,35 +1,39 @@
 import React from "react";
-import {FormStore} from "../Stores/FormStore";
-import {action} from "mobx";
-import {observer} from "mobx-react";
+import { FormStore } from "../Stores/FormStore";
+import { action } from "mobx";
+import { observer } from "mobx-react";
+import {FormContext} from "../context/FormContext";
 
 interface FieldProps {
-    formStore: FormStore,
-    label : string,
-    name: string,
-    required?: boolean,
-    type: string
+    formStore?: FormStore;
+    label: string;
+    name: string;
+    required?: boolean;
+    type: string;
 }
 
 @observer
 class FieldComponent extends React.Component<FieldProps> {
-    constructor(props: FieldProps) {
-        super(props);
+    static contextType = FormContext;
+    context!: FormStore;
+
+    get formStore() {
+        return this.props.formStore || this.context;
     }
 
-    @action handleChange=(e : React.ChangeEvent<HTMLInputElement>)=>{
-        this.props.formStore.setInputFieldValue(this.props.name,e.target.value);
-    }
+    @action handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        this.formStore.setInputFieldValue(this.props.name, e.target.value);
+    };
 
     componentDidMount() {
-            if (this.props.required) {
-                this.props.formStore.validateFields[this.props.name] = true;
-            }
+        if (this.props.required) {
+            this.formStore.validateFields[this.props.name] = true;
+        }
     }
 
     render() {
-        const { formStore, label, name, required, type } = this.props;
-        const errorMessage = formStore.errors[name];
+        const { label, name, required, type } = this.props;
+        const errorMessage = this.formStore.errors[name];
 
         return (
             <div>
@@ -40,7 +44,7 @@ class FieldComponent extends React.Component<FieldProps> {
                     id={name}
                     type={type}
                     name={name}
-                    value={formStore.data[name] || ""}
+                    value={this.formStore.data[name] || ""}
                     onChange={this.handleChange}
                 />
                 {errorMessage && (

@@ -5,10 +5,10 @@ export interface IProduct {
     category: string,
     price: number,
     discount: number,
-    thumbnail : string,
-    rating : number,
+    thumbnail: string,
+    rating: number,
     id: number,
-    isDeleted : boolean
+    isDeleted: boolean
 }
 
 export interface IFetchProductData {

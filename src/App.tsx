@@ -21,7 +21,7 @@ export const viewMap = {
     CartPage: <Cart cartStore={cartStore} userStore={userStore}/>,
     HomePage: <Home productStore={productStore} userStore={userStore} categoryStore={categoryStore}
                     cartStore={cartStore}/>,
-    NewProductPage: <NewProduct productStore ={productStore} categoryStore = {categoryStore} />
+    NewProductPage: <NewProduct productStore={productStore} categoryStore={categoryStore}/>
 
 };
 
@@ -30,7 +30,7 @@ const App = observer(() => {
     const routerStore = initRouter();
     return (
         <RouterContext.Provider value={routerStore}>
-                <RouterView viewMap={viewMap}/>
+            <RouterView viewMap={viewMap}/>
         </RouterContext.Provider>
     );
 });

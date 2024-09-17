@@ -1,4 +1,4 @@
-import {browserHistory, createRouterState, HistoryAdapter,RouterStore} from 'mobx-state-router';
+import {browserHistory, createRouterState, HistoryAdapter, RouterStore} from 'mobx-state-router';
 
 const notFound = createRouterState('notFound');
 const routes = [
