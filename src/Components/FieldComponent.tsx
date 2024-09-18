@@ -1,58 +1,66 @@
 import React from "react";
-import { FormStore } from "../Stores/FormStore";
-import { action } from "mobx";
-import { observer } from "mobx-react";
+import {FormStore} from "../Stores/FormStore";
+import {observer} from "mobx-react";
 import {FormContext} from "../context/FormContext";
+import {action, makeAutoObservable} from "mobx";
 
 interface FieldProps {
-    formStore?: FormStore;
+    Component: React.ComponentType<any>;
+    formStore: FormStore;
     label: string;
     name: string;
     required?: boolean;
-    type: string;
+    options?: string[];
 }
 
 @observer
 class FieldComponent extends React.Component<FieldProps> {
     static contextType = FormContext;
-    context!: FormStore;
+    context!: React.ContextType<typeof FormContext>;
 
+    constructor(props: FieldProps) {
+        super(props);
+    }
+
+    @action
     get formStore() {
         return this.props.formStore || this.context;
     }
 
-    @action handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    @action handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         this.formStore.setInputFieldValue(this.props.name, e.target.value);
     };
 
     componentDidMount() {
         if (this.props.required) {
-            this.formStore.validateFields[this.props.name] = true;
+            this.formStore.validateFields[this.props.name] = {required: true};
         }
     }
 
     render() {
-        const { label, name, required, type } = this.props;
+        const {label, name, required, Component, ...restProps} = this.props;
         const errorMessage = this.formStore.errors[name];
 
         return (
             <div>
                 <label htmlFor={name}>
-                    {label}: {required && <span style={{ color: 'indianred' }}>*</span>}
+                    {label}: {required && <span style={{color: "indianred"}}>*</span>}
                 </label>
-                <input
+                <Component
                     id={name}
-                    type={type}
                     name={name}
                     value={this.formStore.data[name] || ""}
                     onChange={this.handleChange}
+                    {...restProps}
                 />
-                {errorMessage && (
-                    <p className="red-color">{errorMessage}</p>
-                )}
+                {errorMessage && <p className="red-color">{errorMessage}</p>}
             </div>
         );
     }
 }
 
-export default FieldComponent;
+const withHOCField = (Component: React.ComponentType<any>) => {
+    return (props: any) => <FieldComponent {...props} Component={Component}/>;
+};
+
+export default withHOCField;

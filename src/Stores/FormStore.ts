@@ -1,9 +1,14 @@
 import {action, makeAutoObservable, observable} from "mobx";
+import {type} from "node:os";
+
+interface Ivalidate {
+    required: boolean
+}
 
 export class FormStore {
     @observable data: { [key: string]: any } = {};
     @observable errors: { [key: string]: string } = {};
-    @observable validateFields: { [key: string]: boolean } = {};
+    @observable validateFields: { [key: string]: Ivalidate } = {};
     initialData: { [key: string]: any } = {};
 
     constructor(data: any) {
@@ -37,11 +42,15 @@ export class FormStore {
         return this.data;
     }
 
-    @action validateField(fieldName: string, value: any) {
-        if (typeof value === 'string' && !value) {
-            this.errors[fieldName] = `This is required !!!`;
-        } else if (typeof value === 'number' && value <= 0) {
-            this.errors[fieldName] = `This should be greater than zero !!!`;
+    @action validateField(fieldName: string, value: any, validate: Ivalidate) {
+        if (validate.required) {
+            if (typeof value === 'string' && !value) {
+                this.errors[fieldName] = `This is required !!!`;
+            } else if (typeof value === 'number' && value <= 0) {
+                this.errors[fieldName] = `This should be greater than zero !!!`;
+            } else if (typeof value === 'object' && value.length === 0) {
+                this.errors[fieldName] = `This is required !!!`;
+            }
         }
     }
 
@@ -49,7 +58,7 @@ export class FormStore {
         this.errors = {}
         for (const key in this.data) {
             if (this.validateFields[key]) {
-                this.validateField(key, this.data[key]);
+                this.validateField(key, this.data[key], this.validateFields[key]);
             }
         }
 

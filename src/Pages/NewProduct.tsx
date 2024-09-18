@@ -1,20 +1,25 @@
 import React from 'react';
 import {observer} from 'mobx-react';
-import CategoryDropDown from '../Components/CategoryDropDown';
 import {RootContext} from "../context/RouterContext";
 import {FormStore} from "../Stores/FormStore";
 import {ProductStore} from "../Stores/ProductStore";
 import {CategoryStore} from "../Stores/CategoryStore";
-import FieldComponent from "../Components/FieldComponent";
 import FormComponent from "../Components/FormComponent";
 import {action} from "mobx";
+import {StringField} from "../FormFields/StringField";
+import {NumberField} from "../FormFields/NumberField";
+import {TextAreaField} from "../FormFields/TextArea";
+import {SelectField} from "../FormFields/SelectField";
+import {RadioField} from "../FormFields/RadioField";
+import {CheckField} from "../FormFields/CheckField";
+import {DynamicField} from '../FormFields/JsonInput';
 
-interface NewProductProps {
+interface INewProductProps {
     productStore?: ProductStore;
     categoryStore?: CategoryStore;
 }
 
-interface NewProductState {
+interface INewProductState {
     product: any;
 }
 
@@ -25,47 +30,56 @@ class Product {
     category: string = "";
     price: number = 0;
     discount: number = 0;
-    thumbnail: string = "";
+    thumbnail: string = "https://picsum.photos/id/0/5000/3333";
     rating: number = 0;
     id: number = 0;
     isDeleted: boolean = false;
+    productType: string = "";
+    dynamicFields: string = "";
 }
 
 
 @observer
-export class NewProduct extends React.Component <NewProductProps, NewProductState> {
-
-    constructor(props: NewProductProps) {
-        super(props);
-    }
+export class NewProduct extends React.Component <INewProductProps, INewProductState> {
 
     static contextType = RootContext;
     context!: React.ContextType<typeof RootContext>
-    isEditMode: boolean = false;
     formStore: FormStore = new FormStore(new Product());
+    routerStore : any;
+
+    get isEditMode(){
+        return Number.isInteger(+this.context.routerStore.routerState.params.productId);
+    }
 
     componentDidMount() {
-        const {productStore} = this.props;
-        const routerStore = this.context.routerStore;
-        const {routerState} = routerStore;
-        const id = routerState.params.productId;
-        if (id) {
-            this.isEditMode = true;
-            const product = productStore && productStore.getProductById(id);
-            if (product) {
-                this.formStore.setData(product);
-            } else {
-                this.isEditMode = false;
-                alert('Product Id does not Exist !! So redirected to New Product ');
-            }
+        this.routerStore=this.context.routerStore;
+        const id = this.context.routerStore.routerState.params.productId;
+        if(id){
+            this.setProductData(id);
         }
+
         this.setValidateFields();
+        this.props.categoryStore?.setCategoryDetails();
+    }
+
+
+    setProductData(id: string) {
+
+        const {productStore}=this.props;
+        const product = productStore && productStore.getProductById(id);
+        if(product){
+            this.formStore.setData(product);
+        }
+        else{
+            alert('Product Id does not Exist !! So redirected to New Product');
+            this.routerStore.goTo('NewProductPage').then();
+        }
     }
 
     @action setValidateFields() {
         this.formStore.validateFields = {
             ...this.formStore.validateFields,
-            "description": true
+            "description": {required: true}
         }
     }
 
@@ -99,66 +113,67 @@ export class NewProduct extends React.Component <NewProductProps, NewProductStat
                 <div className="add-cart-page">
                     <h2>{this.isEditMode ? 'Edit Product' : 'Add a New Product'}</h2>
                     <div className="add-form">
+
                         <FormComponent formStore={this.formStore} onSubmit={this.handleSubmit}
                                        showResetButton={true}>
-                            <FieldComponent
-                                formStore={this.formStore}
+
+                            <StringField
                                 name="product_name"
                                 label="Name"
-                                type="text"
                                 required={true}
                             />
-                            <div>
-                                <label htmlFor="category">Category:</label>
-                                <CategoryDropDown
-                                    categoryData={this.props.categoryStore?.categoryList || []}
-                                    onSelect={this.handleCategoryChange}
-                                    value={this.formStore.data["category"]}
-                                />
-                                {this.formStore.errors.category && (
-                                    <p className="red-color">{this.formStore.errors.category}</p>
-                                )}
-                            </div>
-                            <FieldComponent
-                                formStore={this.formStore}
+
+                            <SelectField
+                                name="category"
+                                label="category"
+                                options={this.props.categoryStore?.categoryList || []}
+                                required={true}
+                                default="select a category"
+                            />
+                            <NumberField
                                 name="price"
                                 label="price"
-                                type="number"
                                 required={true}
                             />
 
-                            <FieldComponent
-                                formStore={this.formStore}
+                            <NumberField
                                 name="discount"
                                 label="discount"
-                                type="number"
+                                required={true}
+                            />
+                            <RadioField
+                                name="productType"
+                                label="Product Type"
+                                options={["Type 1", "Type 2", "Type 3"]}
                                 required={true}
                             />
 
-                            <div>
-                                <label htmlFor="description">Description: </label>
-                                <textarea
-                                    style={{
-                                        textAlign: 'left',
-                                        verticalAlign: 'top',
-                                        wordWrap: 'break-word',
-                                        width: "93%",
-                                        height: "200px",
-                                        padding: "20px",
-                                        fontSize: "20px"
-                                    }}
-                                    name="description"
-                                    value={this.formStore.data["description"]}
-                                    onChange={(e) => this.formStore.setInputFieldValue(e.target.name, e.target.value)}
-                                />
-                                {this.formStore.errors.description && (
-                                    <p className="red-color">{this.formStore.errors.description}</p>
-                                )}
-                            </div>
+                            <CheckField
+                                formStore={this.formStore}
+                                name="product_tags"
+                                label="Product Tags"
+                                options={["Beauty", "Lipstick", "Nail Polish", "Fragrances", "Perfumes", "Furniture", "Beds"]}
+                                required={true}
+                            />
+
+                            <DynamicField
+                                formStore={this.formStore}
+                                name="dynamic_fields"
+                                label="Dynamic Fields"
+                                required={true}
+                            />
+
+                            <TextAreaField
+                                label="description"
+                                name="description"
+                                required={true}
+                            />
+
                         </FormComponent>
                     </div>
                 </div>
             </>
         )
     }
+
 }

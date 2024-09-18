@@ -45,20 +45,20 @@ export class ProductStore {
     @action
     async setProductDetails(str: string, id: number) {
         let products = JSON.parse(localStorage.getItem("products") || "[]");
-        let p : string="";
+        let p: string = "";
 
         if (id === 1) {
-            p=str;
+            p = str;
             str = "/category/" + str;
         }
 
         let localStoredProducts: IProduct[] = products.filter((product: IProduct) => !product.isDeleted);
-        if(id === 1){
-            localStoredProducts=localStoredProducts.filter((product : IProduct)=> product.category === p);
+        if (id === 1) {
+            localStoredProducts = localStoredProducts.filter((product: IProduct) => product.category === p);
         }
 
-        if(this.search.length > 0){
-            localStoredProducts= localStoredProducts.filter((product : IProduct) => product.product_name.includes(this.search));
+        if (this.search.length > 0) {
+            localStoredProducts = localStoredProducts.filter((product: IProduct) => product.product_name.includes(this.search));
         }
 
 
@@ -90,13 +90,12 @@ export class ProductStore {
     }
 
     getProductById(id: string) {
-
         return this.productDetails.find((product: IProduct) => product.id === +id);
     }
 
     @action setAddProduct(product: IProduct) {
         this.productDetails = [product, ...this.productDetails];
-        this.search="";
+        this.search = "";
         let products = JSON.parse(localStorage.getItem("products") || "[]");
         products.push(product);
         localStorage.setItem('products', JSON.stringify(products));

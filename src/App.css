@@ -1,176 +1,186 @@
 html {
-  font-family: Arial, serif;
+    font-family: Arial, serif;
 }
 
 button {
-  width: auto;
-  text-wrap: nowrap;
-  padding: 0.6rem 1rem;
-  border-radius: 0.2rem;
-  border: none;
+    width: auto;
+    text-wrap: nowrap;
+    padding: 0.6rem 1rem;
+    border-radius: 0.2rem;
+    border: none;
 }
 
 /* search box css */
 .search-box {
-  width: 60%;
-  padding: 0 10px;
+    width: 60%;
+    padding: 0 10px;
 }
 
 /* Search bar css */
 .search-bar {
-  margin: 20px;
-  display: flex;
-  justify-content: space-around;
-  height: 3vh;
+    margin: 20px;
+    display: flex;
+    justify-content: space-around;
+    height: 3vh;
 }
 
 /* Additional styling for ProductList components */
 .product-item {
-  display: flex;
-  border: 1px solid #ccc;
-  padding: 15px;
-  margin-bottom: 15px;
+    display: flex;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
 .product-thumbnail {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  margin-right: 20px;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    margin-right: 20px;
 }
 
 .product-details {
-  width: 60%;
+    width: 60%;
 }
 
 .text-styling-gray {
-  text-decoration: line-through;
-  color: #888;
+    text-decoration: line-through;
+    color: #888;
 }
 
 /* button cart */
 
 .primary-button {
-  background-color: #5abd5b;
-  color: white;
+    background-color: #5abd5b;
+    color: white;
 }
 
 .user-cart {
-  display: flex;
-  align-self: center;
-  gap: 10px;
+    display: flex;
+    align-self: center;
+    gap: 10px;
 }
 
 button {
-  align-self: center;
-  cursor: pointer;
+    align-self: center;
+    cursor: pointer;
 }
 
 .user-cart-page {
-  font-weight: bold;
-  font-family: sans-serif;
-  display: flex;
-  justify-content: space-between;
-  height: 8vh;
-  margin: 0 20%;
+    font-weight: bold;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: space-between;
+    height: 8vh;
+    margin: 0 20%;
 }
 
 .go-back-from-cart {
-  align-self: center;
-  cursor: pointer;
-  padding: 5px;
+    align-self: center;
+    cursor: pointer;
+    padding: 5px;
 }
 
 .add-cart-page {
-  padding: 10px;
+    padding: 10px;
 }
 
 .flex-container-justify-right {
-  display: flex;
-  justify-content: flex-end;
-  margin: 30px;
+    display: flex;
+    justify-content: flex-end;
+    margin: 30px;
 }
 
 /* form css */
 
 .add-cart-page {
-  max-width: 600px;
-  margin: 0 auto;
-  margin-top: 3%;
-  padding: 20px;
-  background-color: #f7f7f7;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 3%;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .add-cart-page h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 24px;
-  color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
 }
 
 .add-form div {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
 }
 
 .add-form label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #555;
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
 }
 
 .add-form input[type="text"],
 .add-form input[type="number"] {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
 }
 
 .add-form input[type="text"]:focus,
 .add-form input[type="number"]:focus {
-  border-color: #007bff;
-  outline: none;
+    border-color: #007bff;
+    outline: none;
 }
 
 .add-form input[type="submit"] {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: white;
-  font-size: 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .add-form input[type="submit"]:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
 }
 
 .add-form p {
-  color: red;
-  font-size: 14px;
-  margin-top: 5px;
-  margin-bottom: 0;
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-bottom: 0;
 }
 
 .secondary-button {
-  color: white;
-  background-color: lightsalmon;
+    color: white;
+    background-color: lightsalmon;
 }
 
 .tertiary-button {
-  color: white;
-  background-color: #ea5f5f;
+    color: white;
+    background-color: #ea5f5f;
 }
 
-.red-color{
-    color:red;
+.red-color {
+    color: red;
+}
+
+.textarea-box {
+    text-align: left;
+    vertical-align: top;
+    word-wrap: break-word;
+    width: 93%;
+    height: 200px;
+    padding: 1.5rem;
+    font-size: 1.5rem;
 }

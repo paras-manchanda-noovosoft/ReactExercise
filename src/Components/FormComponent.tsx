@@ -1,4 +1,4 @@
-import React, {createContext, ReactNode} from 'react';
+import React, {ReactNode} from 'react';
 import {FormContext} from '../context/FormContext';
 import {FormStore} from '../Stores/FormStore';
 
@@ -11,10 +11,11 @@ interface FormProps {
     children?: ReactNode;
 }
 
-class FormComponent extends React.Component<FormProps> {
+export default class FormComponent extends React.Component<FormProps> {
     constructor(props: FormProps) {
         super(props);
     }
+
     resetForm = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         this.props.formStore.reset();
@@ -49,5 +50,3 @@ class FormComponent extends React.Component<FormProps> {
         );
     }
 }
-
-export default FormComponent;
