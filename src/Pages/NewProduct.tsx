@@ -146,13 +146,14 @@ export class NewProduct extends React.Component <INewProductProps, INewProductSt
                                 label="Product Type"
                                 options={["Type 1", "Type 2", "Type 3"]}
                                 required={true}
+                                formStore = {this.formStore}
                             />
 
                             <CheckField
                                 formStore={this.formStore}
                                 name="product_tags"
                                 label="Product Tags"
-                                options={["Beauty", "Lipstick", "Nail Polish", "Fragrances", "Perfumes", "Furniture", "Beds"]}
+                                options={["beauty", "lipstick", "nail polish", "fragrances", "perfumes", "furniture", "beds"]}
                                 required={true}
                             />
 

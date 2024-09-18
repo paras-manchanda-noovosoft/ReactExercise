@@ -1,14 +1,13 @@
 import {action, makeAutoObservable, observable} from "mobx";
-import {type} from "node:os";
 
-interface Ivalidate {
+interface IValidate {
     required: boolean
 }
 
 export class FormStore {
     @observable data: { [key: string]: any } = {};
     @observable errors: { [key: string]: string } = {};
-    @observable validateFields: { [key: string]: Ivalidate } = {};
+    @observable validateFields: { [key: string]: IValidate } = {};
     initialData: { [key: string]: any } = {};
 
     constructor(data: any) {
@@ -42,15 +41,34 @@ export class FormStore {
         return this.data;
     }
 
-    @action validateField(fieldName: string, value: any, validate: Ivalidate) {
-        if (validate.required) {
-            if (typeof value === 'string' && !value) {
-                this.errors[fieldName] = `This is required !!!`;
-            } else if (typeof value === 'number' && value <= 0) {
-                this.errors[fieldName] = `This should be greater than zero !!!`;
-            } else if (typeof value === 'object' && value.length === 0) {
-                this.errors[fieldName] = `This is required !!!`;
-            }
+    @action validateField(fieldName: string, value: any, validate: IValidate) {
+
+        let errorMessage: string | null = null;
+
+        switch (typeof value) {
+            case 'string':
+                if (!value) {
+                    errorMessage = 'This is required !!!';
+                }
+                break;
+            case 'number':
+                if (value <= 0) {
+                    errorMessage = 'This should be greater than zero !!!';
+                }
+                break;
+            case 'object':
+                if (Array.isArray(value)) {
+                    if (value.length === 0 || value.some(item => item.length === 0)) {
+                        errorMessage = 'This is required !!!';
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        if (errorMessage) {
+            this.errors[fieldName] = errorMessage;
         }
     }
 

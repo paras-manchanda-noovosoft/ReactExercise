@@ -1,6 +1,8 @@
 import React from "react";
 import withHOCField from "../Components/FieldComponent";
+import {observer} from "mobx-react";
 
+@observer
 class WrappedTextArea extends React.Component {
     render() {
         return (

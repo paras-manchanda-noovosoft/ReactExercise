@@ -16,6 +16,7 @@ class WrappedDynamicField extends React.Component<any> {
     @action handleAdd = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         this.fields.push({id: this.fieldId++});
+
     };
 
     @action handleDelete = (e: React.MouseEvent<HTMLElement>, id: number) => {

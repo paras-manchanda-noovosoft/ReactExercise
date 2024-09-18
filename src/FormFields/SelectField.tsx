@@ -1,5 +1,6 @@
 import React from "react";
 import withHOCField from "../Components/FieldComponent";
+import {observer} from "mobx-react";
 
 interface ISelectFieldProps {
     label: string,
@@ -9,6 +10,7 @@ interface ISelectFieldProps {
     default: string
 }
 
+@observer
 class WrappedSelectField extends React.Component<ISelectFieldProps> {
     render() {
         return (

@@ -7,22 +7,20 @@ import {ProductStore} from "../Stores/ProductStore";
 import {UserStore} from "../Stores/UserStore";
 import {CategoryStore} from "../Stores/CategoryStore";
 import CategoryDropDown from "../Components/CategoryDropDown";
-import { useRouterStore } from 'mobx-state-router';
+import {useRouterStore} from 'mobx-state-router';
 
-export  const Home = observer(({productStore, userStore, categoryStore, cartStore}: {
+export const Home = observer(({productStore, userStore, categoryStore, cartStore}: {
     productStore: ProductStore,
     userStore: UserStore,
     categoryStore: CategoryStore,
     cartStore: CartStore
 }) => {
-    const routerStore=useRouterStore();
-    const redirectAddPage=()=>{
+    const routerStore = useRouterStore();
+    const redirectAddPage = () => {
         routerStore.goTo('NewProductPage');
     }
     const deleteProduct = async (id: number) => {
-
-        // if it is present in the cartStore
-        if(cartStore.cartStoreDetails.some((item : ICartType)=> item.productDetail.id === id)){
+        if (cartStore.cartStoreDetails.some((item: ICartType) => item.productDetail.id === id)) {
             cartStore.deleteFromCart(id);
         }
 
@@ -97,13 +95,13 @@ export  const Home = observer(({productStore, userStore, categoryStore, cartStor
                     <CategoryDropDown categoryData={categoryStore.categoryList} onSelect={handleCategoryChange}/>}
                 <div className="user-cart">
                     <p>{userStore.user}</p>
-                    <button onClick={()=> routerStore.goTo('CartPage')}> User
+                    <button onClick={() => routerStore.goTo('CartPage')}> User
                         Cart {cartStore.cartStoreDetails.length}  </button>
                 </div>
             </div>
 
             <div className="flex-container-justify-right">
-                <button className={"primary-button"} onClick={redirectAddPage} >Add Product
+                <button className={"primary-button"} onClick={redirectAddPage}>Add Product
                 </button>
             </div>
             <div>

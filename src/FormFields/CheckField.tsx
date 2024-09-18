@@ -33,9 +33,8 @@ class WrappedCheckField extends React.Component<any> {
                                 type="checkbox"
                                 name={option}
                                 value={option}
-                                checked={formStore.data[name].includes(option)}
+                                checked={formStore.data[name].includes(option.toLowerCase())}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.handleCheckedFields(e.target.value)}
-
                             />
                             <span>{option}</span>
                         </div>

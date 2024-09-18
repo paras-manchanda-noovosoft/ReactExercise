@@ -1,10 +1,11 @@
 import React from "react";
 import withHOCField from "../Components/FieldComponent";
+import {observer} from "mobx-react";
 
+@observer
 class WrappedRadioField extends React.Component<any> {
     render() {
-        const {name, options, onChange} = this.props;
-
+        const {name, options, onChange,formStore} = this.props;
         return (
             <div>
                 {options.map((option: string, index: number) => (
@@ -14,6 +15,7 @@ class WrappedRadioField extends React.Component<any> {
                             name={name}
                             value={option}
                             onChange={onChange}
+                            checked={formStore.data[name] === option}
                         />
                         <span>{option}</span>
                     </div>
