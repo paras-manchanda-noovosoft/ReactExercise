@@ -1,5 +1,6 @@
 html {
     font-family: Arial, serif;
+     box-sizing: border-box;
 }
 
 button {
@@ -10,13 +11,11 @@ button {
     border: none;
 }
 
-/* search box css */
 .search-box {
     width: 60%;
     padding: 0 10px;
 }
 
-/* Search bar css */
 .search-bar {
     margin: 20px;
     display: flex;
@@ -89,6 +88,7 @@ button {
     display: flex;
     justify-content: flex-end;
     margin: 30px;
+    gap:10px;
 }
 
 /* form css */
@@ -183,4 +183,94 @@ button {
     height: 200px;
     padding: 1.5rem;
     font-size: 1.5rem;
+}
+
+.margin-screen{
+    margin: 5% 15%;
+    display: flex;
+    flex-direction: column;
+}
+
+.search {
+    padding: 8px 12px;
+    margin-top: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.flex-container-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.flex-container-wrap button {
+    margin:5px ;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    color: blue;
+    transition: background-color 0.3s ease;
+    background-color: #dad6d6;
+}
+
+.flex-container-wrap button:disabled{
+    background-color: #f4eded;
+}
+table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    text-transform: capitalize;
+}
+
+table tbody tr{
+    border-bottom: 1px solid #dddddd;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+thead tr td {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: center;
+}
+
+table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+.table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table td {
+    max-width: 200px; /* Adjust as needed */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
 }

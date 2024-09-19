@@ -13,6 +13,10 @@ const routes = [
     {
         name: 'NewProductPage',
         pattern: '/new-product-page/:productId?',
+    },
+    {
+        name : 'PostPage',
+        pattern: '/postPage'
     }
 ];
 

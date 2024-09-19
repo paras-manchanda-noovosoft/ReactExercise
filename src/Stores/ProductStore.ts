@@ -14,7 +14,7 @@ export class ProductStore {
 
     @action
     async fetchProductDetails(str: string) {
-        this.loading = true;  // Set loading to true before starting fetch
+        this.loading = true;
         const fetchUrl: string = this.baseUrl + str;
         try {
             const response = await fetch(fetchUrl, {method: 'GET'});

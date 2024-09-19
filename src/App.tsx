@@ -10,19 +10,20 @@ import {CategoryStore} from "./Stores/CategoryStore";
 import Cart from "./Pages/Cart";
 import {Home} from "./Pages/Home";
 import {NewProduct} from './Pages/NewProduct';
-
-
+import PostPage from "./Pages/PostPage";
+import ListTableStore from "./Stores/ListTableStore";
 const productStore = new ProductStore();
 const userStore = new UserStore();
 const categoryStore = new CategoryStore();
 const cartStore = new Cartstore();
+const listTableStore = new ListTableStore();
 
 export const viewMap = {
     CartPage: <Cart cartStore={cartStore} userStore={userStore}/>,
     HomePage: <Home productStore={productStore} userStore={userStore} categoryStore={categoryStore}
                     cartStore={cartStore}/>,
-    NewProductPage: <NewProduct productStore={productStore} categoryStore={categoryStore}/>
-
+    NewProductPage: <NewProduct productStore={productStore} categoryStore={categoryStore}/>,
+    PostPage: <PostPage listTableStore={listTableStore}/>
 };
 
 const App = observer(() => {

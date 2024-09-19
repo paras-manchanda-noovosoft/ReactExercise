@@ -8,6 +8,7 @@ import {UserStore} from "../Stores/UserStore";
 import {CategoryStore} from "../Stores/CategoryStore";
 import CategoryDropDown from "../Components/CategoryDropDown";
 import {useRouterStore} from 'mobx-state-router';
+import PostPage from "./PostPage";
 
 export const Home = observer(({productStore, userStore, categoryStore, cartStore}: {
     productStore: ProductStore,
@@ -17,7 +18,10 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
 }) => {
     const routerStore = useRouterStore();
     const redirectAddPage = () => {
-        routerStore.goTo('NewProductPage');
+      routerStore.goTo('NewProductPage').then();
+    }
+    const redirectPostPage=()=>{
+        routerStore.goTo('PostPage').then();
     }
     const deleteProduct = async (id: number) => {
         if (cartStore.cartStoreDetails.some((item: ICartType) => item.productDetail.id === id)) {
@@ -64,6 +68,8 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
         productStore.setSearchData(e.target.value);
     }
 
+
+
     useEffect(() => {
         if (productStore.search?.length > 0) {
             const timer: any = setTimeout(() => {
@@ -101,6 +107,7 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
             </div>
 
             <div className="flex-container-justify-right">
+                <button className="primary-button" onClick={redirectPostPage}> Post Page </button>
                 <button className={"primary-button"} onClick={redirectAddPage}>Add Product
                 </button>
             </div>

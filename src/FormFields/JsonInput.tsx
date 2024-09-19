@@ -1,7 +1,7 @@
 import React from "react";
 import withHOCField from "../Components/FieldComponent";
 import {observer} from "mobx-react";
-import {action, makeObservable, observable} from "mobx";
+import {action, makeObservable, observable, reaction} from "mobx";
 
 @observer
 class WrappedDynamicField extends React.Component<any> {
@@ -13,10 +13,21 @@ class WrappedDynamicField extends React.Component<any> {
         makeObservable(this);
     }
 
+    @action resetFields = () => {
+        this.fields = [];
+        this.fieldId = 0;
+        this.props.formStore.setInputFieldValue(this.props.name, []);
+    };
+
+
+
     @action handleAdd = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        this.fields.push({id: this.fieldId++});
-
+        const newField = { id: this.fieldId++ };
+        this.fields.push(newField);
+        let contentArray = this.props.formStore.data[this.props.name] || [];
+        contentArray.push("");  // Adding an empty string or any initial value
+        this.props.formStore.setInputFieldValue(this.props.name, contentArray);
     };
 
     @action handleDelete = (e: React.MouseEvent<HTMLElement>, id: number) => {
@@ -31,7 +42,8 @@ class WrappedDynamicField extends React.Component<any> {
         const contentArray = this.props.formStore.data[this.props.name] || [];
         contentArray[ind] = value;
         this.props.formStore.setInputFieldValue(this.props.name, contentArray);
-    }
+    };
+
 
     render() {
         return (
