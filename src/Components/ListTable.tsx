@@ -2,6 +2,7 @@ import React from "react";
 import {observer} from "mobx-react";
 import {IPostTypes} from "../Types/PostTypes";
 import {action, observable} from "mobx";
+import listTableStore from "../Stores/ListTableStore";
 
 @observer
 class ListTable extends React.Component<any> {
@@ -15,6 +16,18 @@ class ListTable extends React.Component<any> {
         super(props);
         this.props.fetchData(this.itemsPerPage, this.currentPage).then();
     }
+
+    columnHeaderMap: { [key: string]: string } = {
+        title: "Post Title",
+        body: "Post Description",
+        tags: "Post Tags",
+    };
+
+
+    @action formatData = (value: string) => {
+        return "Post Description"
+    };
+
 
     @action selectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
         const isChecked = e.target.checked;
@@ -49,10 +62,10 @@ class ListTable extends React.Component<any> {
 
     render() {
 
-        const { listTableStore } = this.props;
+        const {listTableStore} = this.props;
         const data = listTableStore.data;
         const columns = data?.length > 0 ? Object.keys(data[0]).filter(key => key !== 'id') : [];
-        this.totalPages = data?.length > 0 ? Math.ceil(data[0].total / this.itemsPerPage) : 0;
+        this.totalPages = listTableStore.totalPages;
 
         return (
             <>
@@ -73,8 +86,10 @@ class ListTable extends React.Component<any> {
                                     checked={listTableStore.data.every((row: any) => listTableStore.selectedRows.has(row.id))}
                                 />
                             </td>
-                            {columns.map((column, index) => (
-                                <td key={index}>{column}</td>
+                            {columns.map((column: string, index: number) => (
+                                <td>
+                                    {this.columnHeaderMap[column] || column}
+                                </td>
                             ))}
                         </tr>
                         </thead>
@@ -115,6 +130,11 @@ class ListTable extends React.Component<any> {
                         >
                             {this.currentPage}
                         </button>
+                        {this.currentPage < this.totalPages &&
+                            <button
+                        >
+                            {this.currentPage+1}
+                        </button>}
                         <button
                             onClick={() => this.handlePageChange(this.currentPage + 1)}
                             disabled={this.currentPage === this.totalPages}

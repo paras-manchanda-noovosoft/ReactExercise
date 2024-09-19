@@ -1,6 +1,6 @@
 html {
     font-family: Arial, serif;
-     box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 button {
@@ -88,7 +88,7 @@ button {
     display: flex;
     justify-content: flex-end;
     margin: 30px;
-    gap:10px;
+    gap: 10px;
 }
 
 /* form css */
@@ -185,7 +185,7 @@ button {
     font-size: 1.5rem;
 }
 
-.margin-screen{
+.margin-screen {
     margin: 5% 15%;
     display: flex;
     flex-direction: column;
@@ -207,7 +207,7 @@ button {
 }
 
 .flex-container-wrap button {
-    margin:5px ;
+    margin: 5px;
     font-size: 16px;
     border: none;
     border-radius: 5px;
@@ -216,9 +216,10 @@ button {
     background-color: #dad6d6;
 }
 
-.flex-container-wrap button:disabled{
+.flex-container-wrap button:disabled {
     background-color: #f4eded;
 }
+
 table {
     border-collapse: collapse;
     margin: 25px 0;
@@ -229,7 +230,7 @@ table {
     text-transform: capitalize;
 }
 
-table tbody tr{
+table tbody tr {
     border-bottom: 1px solid #dddddd;
 }
 
@@ -243,6 +244,7 @@ thead tr {
     color: #ffffff;
     text-align: left;
 }
+
 thead tr td {
     background-color: #009879;
     color: #ffffff;
@@ -260,6 +262,7 @@ table tbody tr:nth-of-type(even) {
 tbody tr:last-of-type {
     border-bottom: 2px solid #009879;
 }
+
 .table tr:hover {
     background-color: #f1f1f1;
 }
@@ -270,6 +273,7 @@ tbody tr:last-of-type {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 table tbody tr.active-row {
     font-weight: bold;
     color: #009879;

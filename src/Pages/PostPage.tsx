@@ -7,24 +7,16 @@ import ListTable from "../Components/ListTable";
 @observer
 class PostPage extends React.Component<IPostPageProps> {
     @observable apiUrl: string = 'https://dummyjson.com/posts';
-    total: number = 0;
 
     constructor(props: IPostPageProps) {
         super(props);
     }
 
     @action
-    calculateTotalPages = (itemPerPage: number): number => {
-        return Math.ceil(this.total / itemPerPage);
-    }
-
-
-    @action
     fetchData = async (itemsPerPage: number, currentPage: number) => {
         try {
             const response = await fetch(`${this.apiUrl}?limit=${itemsPerPage}&skip=${(currentPage - 1) * itemsPerPage}`);
             const data = await response.json();
-            this.total = data.total;
             runInAction(() => {
                 const postData = data.posts.map((post: any) => ({
                     id: post.id,
@@ -73,7 +65,6 @@ class PostPage extends React.Component<IPostPageProps> {
                 <ListTable listTableStore={listTableStore}
                            fetchData={this.fetchData}
                            fetchSearch={this.fetchSearch}
-                           calculateTotalPages={this.calculateTotalPages}
                 />
             </>
         );

@@ -5,5 +5,5 @@ export interface IPostTypes {
     views: number,
     likes: number,
     dislikes: number,
-    id : number
+    id: number
 }

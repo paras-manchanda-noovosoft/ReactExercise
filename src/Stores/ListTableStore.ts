@@ -1,24 +1,23 @@
-import { action, makeAutoObservable, observable, runInAction } from 'mobx';
+import {action, makeAutoObservable, observable} from 'mobx';
 
-class ListTableStore{
-    @observable data : object[]=[];
+class ListTableStore {
+    @observable data: object[] = [];
     @observable selectedRows: Set<number> = new Set();
-    @observable total : number =0;
-
+    @observable total: number = 0;
 
     constructor() {
         makeAutoObservable(this);
     }
 
-    @action setTotal(total : number){
-        this.total=total;
+    @action setTotal(total: number) {
+        this.total = total;
     }
 
-    @action setData(data :any) {
-        this.data=[...data];
+    @action setData(data: any) {
+        this.data = [...data];
     }
 
-    @action selectAll(checked: boolean) {
+    selectAll(checked: boolean) {
         this.data.forEach((val: any) => {
             if (checked) {
                 this.selectedRows.add(val.id);
@@ -28,7 +27,7 @@ class ListTableStore{
         });
     }
 
-    @action updateRowCheckbox(rowId: number, isChecked: boolean) {
+    updateRowCheckbox(rowId: number, isChecked: boolean) {
         if (isChecked) {
             this.selectedRows.add(rowId);
         } else {
