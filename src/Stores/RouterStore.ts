@@ -19,8 +19,8 @@ const routes = [
         pattern: '/postPage'
     },
     {
-        name : 'CssExercisePage',
-        pattern :'/CssExercisePage'
+        name : 'GridExercisePage',
+        pattern :'/GridExercisePage'
     }
 ];
 

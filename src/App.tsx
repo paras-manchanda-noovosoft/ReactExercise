@@ -12,6 +12,7 @@ import {Home} from "./Pages/Home";
 import {NewProduct} from './Pages/NewProduct';
 import PostPage from "./Pages/PostPage";
 import ListTableStore from "./Stores/ListTableStore";
+import GridExercisePage from './Pages/GridExercisePage';
 const productStore = new ProductStore();
 const userStore = new UserStore();
 const categoryStore = new CategoryStore();
@@ -24,6 +25,7 @@ export const viewMap = {
                     cartStore={cartStore}/>,
     NewProductPage: <NewProduct productStore={productStore} categoryStore={categoryStore}/>,
     PostPage: <PostPage listTableStore={listTableStore}/>,
+    GridExercisePage : <GridExercisePage productStore={productStore}/>
 };
 
 const App = observer(() => {

@@ -35,7 +35,7 @@ const Product = observer(({product, cartStore, deleteProduct, updateProduct}: {
                     <h4>
                         {product.product_name} (
                         {product.product_tags.length > 0 && product.product_tags.map((tag: string, index: number) => (
-                            <span style={{paddingLeft: '0.6rem'}} key={index}>{tag}</span>
+                            <span className="light-small-text" style={{paddingLeft: '0.6rem'}} key={index}>{tag}</span>
                         ))}
                         )
                     </h4>

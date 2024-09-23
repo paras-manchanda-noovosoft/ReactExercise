@@ -23,6 +23,9 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
     const redirectAddPage = () => {
       routerStore.goTo('NewProductPage').then();
     }
+    const redirectGridPage = () => {
+        routerStore.goTo('GridExercisePage').then();
+    }
     const redirectPostPage=()=>{
         routerStore.goTo('PostPage').then();
     }
@@ -110,12 +113,13 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
             </header>
 
             <div className="flex-container-justify-right">
+                <button className="primary-button" onClick={redirectGridPage}> Grid Page</button>
                 <button className="primary-button" onClick={redirectPostPage}> Post Page</button>
                 <button className={"primary-button"} onClick={redirectAddPage}>Add Product
                 </button>
             </div>
             <div>
-                <h1 style={{textAlign: "center" ,fontSize:"1.3rem"}}>Product List</h1>
+                <h1 style={{textAlign: "center", fontSize: "1.3rem"}}>Product List</h1>
                 {productStore.productDetails?.length === 0 ? (
                     <p>Loading products...</p>
                 ) : (
