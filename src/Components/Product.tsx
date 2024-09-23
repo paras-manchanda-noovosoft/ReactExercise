@@ -29,9 +29,9 @@ const Product = observer(({product, cartStore, deleteProduct, updateProduct}: {
 
     return (
         <>
-            <div className="product-item">
+            <div className="product-item column-direction">
                 <img src={product.thumbnail ?? ""} alt={product.product_name} className="product-thumbnail"/>
-                <div className="product-details">
+                <div className="product-details full-width">
                     <h4>
                         {product.product_name} (
                         {product.product_tags.length > 0 && product.product_tags.map((tag: string, index: number) => (
@@ -55,7 +55,7 @@ const Product = observer(({product, cartStore, deleteProduct, updateProduct}: {
                         )}
                 </div>
 
-                <div className="edit-product-order">
+                <div className="edit-product-order top-right-action-buttons">
                     <button className={"secondary-button"} style={{margin: "0 0.7rem"}}
                             onClick={updateFromProduct}> Edit
                     </button>

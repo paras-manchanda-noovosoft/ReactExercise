@@ -8,9 +8,8 @@ import {UserStore} from "../Stores/UserStore";
 import {CategoryStore} from "../Stores/CategoryStore";
 import CategoryDropDown from "../Components/CategoryDropDown";
 import {useRouterStore} from 'mobx-state-router';
-import PostPage from "./PostPage";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faCartShopping} from '@fortawesome/free-solid-svg-icons';
 
 
 export const Home = observer(({productStore, userStore, categoryStore, cartStore}: {
@@ -21,12 +20,12 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
 }) => {
     const routerStore = useRouterStore();
     const redirectAddPage = () => {
-      routerStore.goTo('NewProductPage').then();
+        routerStore.goTo('NewProductPage').then();
     }
     const redirectGridPage = () => {
         routerStore.goTo('GridExercisePage').then();
     }
-    const redirectPostPage=()=>{
+    const redirectPostPage = () => {
         routerStore.goTo('PostPage').then();
     }
     const deleteProduct = async (id: number) => {
@@ -75,7 +74,6 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
     }
 
 
-
     useEffect(() => {
         if (productStore.search?.length > 0) {
             const timer: any = setTimeout(() => {
@@ -107,7 +105,8 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
                     <CategoryDropDown categoryData={categoryStore.categoryList} onSelect={handleCategoryChange}/>}
                 <div className="user-cart">
                     <p>{userStore.user}</p>
-                    <button onClick={() => routerStore.goTo('CartPage')}><FontAwesomeIcon className="cart-icon" icon={faCartShopping} />
+                    <button onClick={() => routerStore.goTo('CartPage')}><FontAwesomeIcon className="cart-icon"
+                                                                                          icon={faCartShopping}/>
                         {cartStore.cartStoreDetails.length}  </button>
                 </div>
             </header>
@@ -119,16 +118,23 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
                 </button>
             </div>
             <div>
-                <h1 style={{textAlign: "center", fontSize: "1.3rem"}}>Product List</h1>
-                {productStore.productDetails?.length === 0 ? (
-                    <p>Loading products...</p>
-                ) : (
-                    productStore.productDetails.map((product: IProduct) => (
-                        <Product key={product.id} product={product} cartStore={cartStore} deleteProduct={deleteProduct}
-                                 updateProduct={handleUpdateProduct}
-                        />
-                    ))
-                )}
+
+                <div>
+
+                    <h1 style={{textAlign: "center", fontSize: "1.3rem"}}>Product List</h1>
+                    <div className="three-column-grid">
+                        {productStore.productDetails?.length === 0 ? (
+                            <p>Loading products...</p>
+                        ) : (
+                            productStore.productDetails.map((product: IProduct) => (
+                                <Product key={product.id} product={product} cartStore={cartStore}
+                                         deleteProduct={deleteProduct}
+                                         updateProduct={handleUpdateProduct}
+                                />
+                            ))
+                        )}
+                    </div>
+                </div>
             </div>
         </>
     )
