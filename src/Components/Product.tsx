@@ -55,7 +55,7 @@ const Product = observer(({product, cartStore, deleteProduct, updateProduct}: {
                         )}
                 </div>
 
-                <div>
+                <div className="edit-product-order">
                     <button className={"secondary-button"} style={{margin: "0 0.7rem"}}
                             onClick={updateFromProduct}> Edit
                     </button>

@@ -11,7 +11,7 @@ const CategoryDropDown = observer(({categoryData, onSelect, value}: {
     };
     return (
         <>
-            <select onChange={handleChange} value={value} required>
+            <select className="dropdown-bar full-width" onChange={handleChange} value={value} required>
                 <option value="" hidden>Select a category</option>
                 {categoryData && categoryData.map((data, index) => (
                     <option key={index} value={data}>

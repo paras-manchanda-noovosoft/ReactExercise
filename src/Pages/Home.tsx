@@ -9,6 +9,9 @@ import {CategoryStore} from "../Stores/CategoryStore";
 import CategoryDropDown from "../Components/CategoryDropDown";
 import {useRouterStore} from 'mobx-state-router';
 import PostPage from "./PostPage";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+
 
 export const Home = observer(({productStore, userStore, categoryStore, cartStore}: {
     productStore: ProductStore,
@@ -95,24 +98,24 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
 
     return (
         <>
-            <div className="search-bar">
+            <header className="search-bar">
                 <input type="text" placeholder="Search ..." className="search-box" onChange={handleSearchData}/>
                 {categoryStore.categoryList &&
                     <CategoryDropDown categoryData={categoryStore.categoryList} onSelect={handleCategoryChange}/>}
                 <div className="user-cart">
                     <p>{userStore.user}</p>
-                    <button onClick={() => routerStore.goTo('CartPage')}> User
-                        Cart {cartStore.cartStoreDetails.length}  </button>
+                    <button onClick={() => routerStore.goTo('CartPage')}><FontAwesomeIcon className="cart-icon" icon={faCartShopping} />
+                        {cartStore.cartStoreDetails.length}  </button>
                 </div>
-            </div>
+            </header>
 
             <div className="flex-container-justify-right">
-                <button className="primary-button" onClick={redirectPostPage}> Post Page </button>
+                <button className="primary-button" onClick={redirectPostPage}> Post Page</button>
                 <button className={"primary-button"} onClick={redirectAddPage}>Add Product
                 </button>
             </div>
             <div>
-                <h1 style={{textAlign: "center"}}>Product List</h1>
+                <h1 style={{textAlign: "center" ,fontSize:"1.3rem"}}>Product List</h1>
                 {productStore.productDetails?.length === 0 ? (
                     <p>Loading products...</p>
                 ) : (

@@ -17,6 +17,10 @@ const routes = [
     {
         name : 'PostPage',
         pattern: '/postPage'
+    },
+    {
+        name : 'CssExercisePage',
+        pattern :'/CssExercisePage'
     }
 ];
 

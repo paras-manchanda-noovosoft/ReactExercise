@@ -23,7 +23,7 @@ export const viewMap = {
     HomePage: <Home productStore={productStore} userStore={userStore} categoryStore={categoryStore}
                     cartStore={cartStore}/>,
     NewProductPage: <NewProduct productStore={productStore} categoryStore={categoryStore}/>,
-    PostPage: <PostPage listTableStore={listTableStore}/>
+    PostPage: <PostPage listTableStore={listTableStore}/>,
 };
 
 const App = observer(() => {

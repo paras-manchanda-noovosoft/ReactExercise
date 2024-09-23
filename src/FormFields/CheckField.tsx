@@ -26,9 +26,9 @@ class WrappedCheckField extends React.Component<any> {
         const {name, options, formStore} = this.props;
         return (
             <>
-                <div style={{display: 'flex', flexWrap: 'wrap'}}>
+                <div className="responsive-checkfield">
                     {options.map((option: string, index: number) => (
-                        <div key={index} style={{width: '20%', margin: "10px"}}>
+                        <div key={index} className="checkbox-container">
                             <input
                                 type="checkbox"
                                 name={option}
@@ -36,7 +36,7 @@ class WrappedCheckField extends React.Component<any> {
                                 checked={formStore.data[name].includes(option.toLowerCase())}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.handleCheckedFields(e.target.value)}
                             />
-                            <span>{option}</span>
+                            <span style={{marginLeft:"0.2rem"}}>{option}</span>
                         </div>
                     ))}
                 </div>

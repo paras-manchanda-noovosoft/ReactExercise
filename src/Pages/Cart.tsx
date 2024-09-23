@@ -6,7 +6,6 @@ import {useRouterStore} from "mobx-state-router";
 import {UserStore} from "../Stores/UserStore";
 
 const Cart = observer(({cartStore, userStore}: { cartStore: Cartstore, userStore: UserStore }) => {
-    console.log("hello");
     const cartLength: number = cartStore.length();
     const cartProduct: ICartType[] = cartStore.cartDetails;
     const routerStore = useRouterStore();
@@ -14,7 +13,7 @@ const Cart = observer(({cartStore, userStore}: { cartStore: Cartstore, userStore
     return (
         <>
             <div className="user-cart-page">
-                <h1> Items Selected By the user {userStore.user}</h1>
+                <h1 className="cart-title"> Items Selected By the user {userStore.user}</h1>
                 <button className="go-back-from-cart" onClick={() => routerStore.goTo('HomePage')}>Go back</button>
             </div>
             {cartLength === 0 ? (
