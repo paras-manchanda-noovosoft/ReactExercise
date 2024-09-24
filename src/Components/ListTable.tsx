@@ -1,71 +1,47 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {IPostTypes} from "../Types/PostTypes";
-import {action, observable} from "mobx";
-import listTableStore from "../Stores/ListTableStore";
+import {action} from "mobx";
+
+interface ListTableProps {
+    listTableStore: any;
+    processData: any;
+    columns: { key: string; label: string }[];
+}
 
 @observer
-class ListTable extends React.Component<any> {
+class ListTable extends React.Component<ListTableProps> {
     searchTimer: any;
-    @observable search: string = "";
-    @observable currentPage: number = 1;
-    @observable totalPages: number = 0;
-    @observable itemsPerPage: number = 10;
 
-    constructor(props: any) {
+    constructor(props: ListTableProps) {
         super(props);
-        this.props.fetchData(this.itemsPerPage, this.currentPage).then();
     }
 
-    columnHeaderMap: { [key: string]: string } = {
-        title: "Post Title",
-        body: "Post Description",
-        tags: "Post Tags",
-    };
-
-
-    @action formatData = (value: string) => {
-        return "Post Description"
-    };
-
-
-    @action selectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const isChecked = e.target.checked;
-        this.props.listTableStore.selectAll(isChecked);
-    };
+    componentDidMount() {
+        this.props.listTableStore.fetchData(this.props.processData).then();
+    }
 
     @action handleRowCheckboxChange = (rowId: number, isChecked: boolean) => {
         this.props.listTableStore.updateRowCheckbox(rowId, isChecked);
     };
 
     @action handlePageChange = (pageNumber: number) => {
-        if (pageNumber < 1 || pageNumber > this.totalPages)
-            return;
-        this.currentPage = pageNumber;
-        this.props.fetchData(this.itemsPerPage, this.currentPage).then();
+        this.props.listTableStore.setPage(pageNumber);
+        this.props.listTableStore.fetchData(this.props.processData).then();
     };
-
-    @action setSearchTerm = (str: string) => {
-        this.search = str;
-        this.props.fetchSearch(this.search, this.itemsPerPage).then();
-    }
 
     @action handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (this.searchTimer) {
             clearTimeout(this.searchTimer);
         }
-
         this.searchTimer = setTimeout(() => {
-            this.setSearchTerm(e.target.value);
+            this.props.listTableStore.setSearchTerm(e.target.value);
+            this.props.listTableStore.fetchSearch(this.props.processData).then();
         }, 1000);
     };
 
     render() {
-
-        const {listTableStore} = this.props;
-        const data = listTableStore.data;
-        const columns = data?.length > 0 ? Object.keys(data[0]).filter(key => key !== 'id') : [];
-        this.totalPages = listTableStore.totalPages;
+        const {data, selectedRows, currentPage, totalPages} = this.props.listTableStore;
+        const {columns} = this.props;
 
         return (
             <>
@@ -82,13 +58,13 @@ class ListTable extends React.Component<any> {
                             <td>
                                 <input
                                     type="checkbox"
-                                    onChange={this.selectAll}
-                                    checked={listTableStore.data.every((row: any) => listTableStore.selectedRows.has(row.id))}
+                                    onChange={(e) => this.props.listTableStore.selectAllRows(e.target.checked)}
+                                    checked={data.every((row: any) => selectedRows.has(row.id))}
                                 />
                             </td>
-                            {columns.map((column: string, index: number) => (
-                                <td>
-                                    {this.columnHeaderMap[column] || column}
+                            {columns.map((column, index) => (
+                                <td key={index}>
+                                    {column.label}
                                 </td>
                             ))}
                         </tr>
@@ -99,7 +75,7 @@ class ListTable extends React.Component<any> {
                                 <td>
                                     <input
                                         type="checkbox"
-                                        checked={listTableStore.selectedRows.has(row.id)}
+                                        checked={selectedRows.has(row.id)}
                                         onChange={(e) =>
                                             this.handleRowCheckboxChange(
                                                 row.id,
@@ -108,9 +84,9 @@ class ListTable extends React.Component<any> {
                                         }
                                     />
                                 </td>
-                                {columns.map((column: string, colIndex) => (
+                                {columns.map((column, colIndex) => (
                                     <td key={`${row.id}-${colIndex}`}>
-                                        {row[column as keyof IPostTypes]}
+                                        {row[column.key]} {/* Access data with the column key */}
                                     </td>
                                 ))}
                             </tr>
@@ -120,24 +96,22 @@ class ListTable extends React.Component<any> {
 
                     <div className="flex-container-wrap">
                         <button
-                            onClick={() => this.handlePageChange(this.currentPage - 1)}
-                            disabled={this.currentPage === 1}
+                            onClick={() => this.handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
                         >
                             &lt;
                         </button>
-                        <button
-                            style={{backgroundColor: 'blue', color: 'white'}}
-                        >
-                            {this.currentPage}
+                        <button style={{backgroundColor: 'blue', color: 'white'}}>
+                            {currentPage}
                         </button>
-                        {this.currentPage < this.totalPages &&
-                            <button
-                        >
-                            {this.currentPage+1}
-                        </button>}
+                        {currentPage < totalPages && (
+                            <button onClick={() => this.handlePageChange(currentPage + 1)}>
+                                {currentPage + 1}
+                            </button>
+                        )}
                         <button
-                            onClick={() => this.handlePageChange(this.currentPage + 1)}
-                            disabled={this.currentPage === this.totalPages}
+                            onClick={() => this.handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
                         >
                             &gt;
                         </button>

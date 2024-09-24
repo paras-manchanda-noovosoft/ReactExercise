@@ -4,96 +4,97 @@ import {action, observable, makeAutoObservable} from "mobx";
 export class ProductStore {
     baseUrl: string = 'https://dummyjson.com/products';
     @observable search = "";
-
+    @observable category = "";
     @observable productDetails: IProduct[] = [];
-    @observable loading: boolean = true;  // Add loading state
+    @observable loading: boolean = true;
 
     constructor() {
         makeAutoObservable(this);
     }
 
     @action
-    async fetchProductDetails(str: string) {
+    async fetchProductDetails(category?: string, search?: string) {
         this.loading = true;
-        const fetchUrl: string = this.baseUrl + str;
+        let fetchUrl: string;
+
+        if (search) {
+            fetchUrl = `${this.baseUrl}/search?q=${search}`;
+        } else {
+            fetchUrl = `${this.baseUrl}?limit=0`;
+        }
+
         try {
             const response = await fetch(fetchUrl, {method: 'GET'});
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const productData = await response.json();
-            const productInventory: IProduct[] = productData["products"].map((data: IFetchProductData) => {
-                return {
-                    product_name: data.title,
-                    product_tags: data.tags,
-                    description: data.description,
-                    category: data.category,
-                    price: data.price,
-                    discount: data.discountPercentage,
-                    thumbnail: data.thumbnail,
-                    rating: data.rating,
-                    id: data.id,
-                    isDeleted: false
-                };
-            });
+            let allSearchProducts: IProduct[] = productData["products"].map((data: IFetchProductData) => ({
+                product_name: data.title,
+                product_tags: data.tags,
+                description: data.description,
+                category: data.category,
+                price: data.price,
+                discount: data.discountPercentage,
+                thumbnail: data.thumbnail,
+                rating: data.rating,
+                id: data.id,
+                isDeleted: false
+            }));
 
-            return productInventory;
+            if (category) {
+                allSearchProducts = allSearchProducts.filter(product => product.category === category);
+            }
+
+            return allSearchProducts;
         } catch (error) {
             console.error("Error fetching products:", error);
+            return [];
         } finally {
-            this.loading = false;  // Set loading to false once the fetch is complete
+            this.loading = false;
         }
     }
 
     @action
-    async setProductDetails(str: string, id: number) {
+    async setProductDetails(category?: string, search?: string) {
         let products = JSON.parse(localStorage.getItem("products") || "[]");
-        let p: string = "";
-
-        if (id === 1) {
-            p = str;
-            str = "/category/" + str;
-        }
-
         let localStoredProducts: IProduct[] = products.filter((product: IProduct) => !product.isDeleted);
-        if (id === 1) {
-            localStoredProducts = localStoredProducts.filter((product: IProduct) => product.category === p);
-        }
 
-        if (this.search.length > 0) {
-            localStoredProducts = localStoredProducts.filter((product: IProduct) => product.product_name.includes(this.search));
+        if (category && category !== 'all') {
+            localStoredProducts = localStoredProducts.filter((product: IProduct) => product.category === category);
         }
-
 
         try {
-            // eslint-disable-next-line react/no-is-mounted
-            const response = await this.fetchProductDetails(str);
+            const apiResponse = await this.fetchProductDetails(category === 'all' ? undefined : category, search);
+            const apiProducts: IProduct[] = apiResponse.filter((product: IProduct) =>
+                !localStoredProducts.some((localProduct: IProduct) => localProduct.id === product.id)
+            );
 
-            if (response) {
-                const apiProducts: IProduct[] = response.filter((product) => {
-                    const index = products.findIndex((prod: IProduct) => product.id === prod.id);
-                    return index === -1;
-                });
-
-                this.productDetails = [...localStoredProducts, ...apiProducts];
-            }
-
+            this.productDetails = [...localStoredProducts, ...apiProducts];
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     }
 
-    @action setSearchData(str: string): void {
+    @action
+    setSearchData(str: string): void {
         this.search = str;
+        this.setProductDetails(this.category, str).then();
     }
 
-    @action searchData(): void {
-        // eslint-disable-next-line react/no-is-mounted
-        this.setProductDetails("/search?q=" + this.search, 2).then();
+    @action
+    setCategory(str: string): void {
+        this.category = str;
+        this.setProductDetails(str, this.search).then();
     }
+
 
     getProductById(id: string) {
         return this.productDetails.find((product: IProduct) => product.id === +id);
     }
 
-    @action setAddProduct(product: IProduct) {
+    @action
+    setAddProduct(product: IProduct) {
         this.productDetails = [product, ...this.productDetails];
         this.search = "";
         let products = JSON.parse(localStorage.getItem("products") || "[]");
@@ -101,9 +102,14 @@ export class ProductStore {
         localStorage.setItem('products', JSON.stringify(products));
     }
 
-    @action updateProduct(product: IProduct) {
+    @action
+    updateProduct(product: IProduct) {
         const ind: number = this.productDetails.findIndex((prod: IProduct) => prod.id === product.id);
-        this.productDetails[ind] = product;
+        if (ind !== -1) {
+            this.productDetails[ind] = product;
+        } else {
+            this.productDetails.push(product);
+        }
         let products = JSON.parse(localStorage.getItem("products") || "[]");
         const index = products.findIndex((existingProduct: IProduct) => existingProduct.id === product.id);
         if (index !== -1) {
@@ -114,5 +120,3 @@ export class ProductStore {
         localStorage.setItem('products', JSON.stringify(products));
     }
 }
-
-

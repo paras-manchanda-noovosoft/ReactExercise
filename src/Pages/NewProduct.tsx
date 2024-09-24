@@ -45,16 +45,16 @@ export class NewProduct extends React.Component <INewProductProps, INewProductSt
     static contextType = RootContext;
     context!: React.ContextType<typeof RootContext>
     formStore: FormStore = new FormStore(new Product());
-    routerStore : any;
+    routerStore: any;
 
-    get isEditMode(){
+    get isEditMode() {
         return Number.isInteger(+this.context.routerStore.routerState.params.productId);
     }
 
     componentDidMount() {
-        this.routerStore=this.context.routerStore;
+        this.routerStore = this.context.routerStore;
         const id = this.context.routerStore.routerState.params.productId;
-        if(id){
+        if (id) {
             this.setProductData(id);
         }
 
@@ -65,12 +65,11 @@ export class NewProduct extends React.Component <INewProductProps, INewProductSt
 
     setProductData(id: string) {
 
-        const {productStore}=this.props;
+        const {productStore} = this.props;
         const product = productStore && productStore.getProductById(id);
-        if(product){
+        if (product) {
             this.formStore.setData(product);
-        }
-        else{
+        } else {
             alert('Product Id does not Exist !! So redirected to New Product');
             this.routerStore.goTo('NewProductPage').then();
         }
@@ -110,67 +109,71 @@ export class NewProduct extends React.Component <INewProductProps, INewProductSt
     render() {
         return (
             <>
-                <div className="add-cart-page">
-                    <h2>{this.isEditMode ? 'Edit Product' : 'Add a New Product'}</h2>
-                    <div className="add-form">
+                <div>
+                    <button className="go-back-from-cart margin-screen" onClick={() => this.routerStore.goTo('HomePage')}>Go back
+                    </button>
+                    <div className="add-cart-page">
+                        <h2>{this.isEditMode ? 'Edit Product' : 'Add a New Product'}</h2>
+                        <div className="add-form">
 
-                        <FormComponent formStore={this.formStore} onSubmit={this.handleSubmit}
-                                       showResetButton={true}>
+                            <FormComponent formStore={this.formStore} onSubmit={this.handleSubmit}
+                                           showResetButton={true}>
 
-                            <StringField
-                                name="product_name"
-                                label="Name"
-                                required={true}
-                            />
+                                <StringField
+                                    name="product_name"
+                                    label="Name"
+                                    required={true}
+                                />
 
-                            <SelectField
-                                name="category"
-                                label="category"
-                                options={this.props.categoryStore?.categoryList || []}
-                                required={true}
-                                default="select a category"
-                            />
-                            <NumberField
-                                name="price"
-                                label="price"
-                                required={true}
-                            />
+                                <SelectField
+                                    name="category"
+                                    label="category"
+                                    options={this.props.categoryStore?.categoryList || []}
+                                    required={true}
+                                    default="select a category"
+                                />
+                                <NumberField
+                                    name="price"
+                                    label="price"
+                                    required={true}
+                                />
 
-                            <NumberField
-                                name="discount"
-                                label="discount"
-                                required={true}
-                            />
-                            <RadioField
-                                name="productType"
-                                label="Product Type"
-                                options={["Type 1", "Type 2", "Type 3"]}
-                                required={true}
-                                formStore = {this.formStore}
-                            />
+                                <NumberField
+                                    name="discount"
+                                    label="discount"
+                                    required={true}
+                                />
+                                <RadioField
+                                    name="productType"
+                                    label="Product Type"
+                                    options={["Type 1", "Type 2", "Type 3"]}
+                                    required={true}
+                                    formStore={this.formStore}
+                                />
 
-                            <CheckField
-                                formStore={this.formStore}
-                                name="product_tags"
-                                label="Product Tags"
-                                options={["beauty", "lipstick", "nail polish", "fragrances", "perfumes", "furniture", "beds"]}
-                                required={true}
-                            />
+                                <CheckField
+                                    formStore={this.formStore}
+                                    name="product_tags"
+                                    label="Product Tags"
+                                    options={["beauty", "lipstick", "nail polish", "fragrances", "perfumes", "furniture", "beds"]}
+                                    required={true}
+                                />
 
-                            <DynamicField
-                                formStore={this.formStore}
-                                name="dynamic_fields"
-                                label="Dynamic Fields"
-                                required={true}
-                            />
+                                <DynamicField
+                                    formStore={this.formStore}
+                                    name="dynamic_fields"
+                                    label="Dynamic Fields"
+                                    required={true}
+                                />
 
-                            <TextAreaField
-                                label="description"
-                                name="description"
-                                required={true}
-                            />
+                                <TextAreaField
+                                    label="description"
+                                    name="description"
+                                    required={true}
+                                />
 
-                        </FormComponent>
+                            </FormComponent>
+                        </div>
                     </div>
                 </div>
             </>

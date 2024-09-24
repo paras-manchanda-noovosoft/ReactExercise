@@ -2,7 +2,7 @@ import React from "react";
 import {FormStore} from "../Stores/FormStore";
 import {observer} from "mobx-react";
 import {FormContext} from "../context/FormContext";
-import {action, makeAutoObservable} from "mobx";
+import {action} from "mobx";
 
 interface FieldProps {
     Component: React.ComponentType<any>;

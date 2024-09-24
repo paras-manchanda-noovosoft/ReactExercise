@@ -15,12 +15,12 @@ const routes = [
         pattern: '/new-product-page/:productId?',
     },
     {
-        name : 'PostPage',
+        name: 'PostPage',
         pattern: '/postPage'
     },
     {
-        name : 'GridExercisePage',
-        pattern :'/GridExercisePage'
+        name: 'GridExercisePage',
+        pattern: '/GridExercisePage'
     }
 ];
 

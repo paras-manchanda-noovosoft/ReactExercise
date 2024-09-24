@@ -1,70 +1,59 @@
 import React from "react";
 import {observer} from "mobx-react";
-import {action, observable, runInAction} from "mobx";
-import {IPostPageProps} from "../Types/PostPageProps";
 import ListTable from "../Components/ListTable";
+import ListTableStore from "../Stores/ListTableStore";
+import {RootContext} from "../context/RouterContext";
 
 @observer
-class PostPage extends React.Component<IPostPageProps> {
-    @observable apiUrl: string = 'https://dummyjson.com/posts';
+class PostPage extends React.Component {
+    apiUrl: string = 'https://dummyjson.com/posts';
+    listTableStore = new ListTableStore(this.apiUrl);
+    static contextType = RootContext;
+    context!: React.ContextType<typeof RootContext>;
+    routerStore: any;
 
-    constructor(props: IPostPageProps) {
-        super(props);
+    columns: { key: string, label: string }[] = [
+        {key: 'title', label: 'Post Title'},
+        {key: 'body', label: 'Post Body'},
+        {key: 'tags', label: 'Post Tags'},
+        {key: 'likes', label: 'Likes Count'},
+        {key: 'dislikes', label: 'Dislikes Count'},
+        {key: 'views', label: 'View Count'},
+    ];
+
+    componentDidMount() {
+        this.routerStore = this.context.routerStore;
     }
 
-    @action
-    fetchData = async (itemsPerPage: number, currentPage: number) => {
-        try {
-            const response = await fetch(`${this.apiUrl}?limit=${itemsPerPage}&skip=${(currentPage - 1) * itemsPerPage}`);
-            const data = await response.json();
-            runInAction(() => {
-                const postData = data.posts.map((post: any) => ({
-                    id: post.id,
-                    title: post.title,
-                    body: post.body,
-                    tags: post.tags.toString(),
-                    likes: post.reactions.likes,
-                    dislikes: post.reactions.dislikes,
-                    views: post.views,
-                }));
-                this.props.listTableStore.setData(postData);
-            });
-        } catch (error) {
-            console.error('Failed to fetch data:', error);
-        }
-    }
+    processData = (data: any) => {
+        const posts = data.posts;
+        const total = data.total;
+        const items = posts.map((item: any) => ({
+            id: item.id,
+            title: item.title,
+            body: item.body,
+            tags: item.tags?.toString(),
+            likes: item.reactions?.likes || 0,
+            dislikes: item.reactions?.dislikes || 0,
+            views: item.views || 0,
+        }));
 
-    @action
-    fetchSearch = async (search: string, itemsPerPage: number) => {
-        try {
-            const response = await fetch(`${this.apiUrl}/search?q=${search}&limit=${itemsPerPage}`);
-            const data = await response.json();
-            runInAction(() => {
-                const postData = data.posts.map((post: any) => ({
-                    id: post.id,
-                    title: post.title,
-                    body: post.body,
-                    tags: post.tags.toString(),
-                    likes: post.reactions.likes,
-                    dislikes: post.reactions.dislikes,
-                    views: post.views,
-                }));
-                this.props.listTableStore.setTotal(data.total);
-                this.props.listTableStore.setData(postData);
-            });
-        } catch (error) {
-            console.error('Failed to fetch search data:', error);
-        }
-    }
+        return {total, items};
+    };
 
     render() {
-        const {listTableStore} = this.props;
-
         return (
             <>
-                <ListTable listTableStore={listTableStore}
-                           fetchData={this.fetchData}
-                           fetchSearch={this.fetchSearch}
+                <button
+                    className="go-back-from-cart margin-screen"
+                    onClick={() => this.routerStore.goTo('HomePage')}
+                >
+                    Go back
+                </button>
+                <ListTable
+                    listTableStore={this.listTableStore}
+                    processData={this.processData}
+                    columns={this.columns}
                 />
             </>
         );

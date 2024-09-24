@@ -3,12 +3,12 @@ import React from 'react';
 import {IProduct} from "../Types/ProductTypes";
 import {ICartType} from "../Stores/CartStore";
 import {useRouterStore} from "mobx-state-router";
+import CommonProduct from "./CommonProduct";
 
-const Product = observer(({product, cartStore, deleteProduct, updateProduct}: {
+const Product = observer(({product, cartStore, deleteProduct}: {
     product: IProduct,
     cartStore: any,
-    deleteProduct: (a: number) => void,
-    updateProduct: (a: number) => void
+    deleteProduct: (a: number) => void
 }) => {
     const routerStore = useRouterStore();
     const handleAddCart = () => {
@@ -24,25 +24,13 @@ const Product = observer(({product, cartStore, deleteProduct, updateProduct}: {
     }
 
     const updateFromProduct = () => {
-        routerStore.goTo('NewProductPage', {params: {productId: product.id.toString()}});
+        routerStore.goTo('NewProductPage', {params: {productId: product.id.toString()}}).then();
     }
 
     return (
         <>
             <div className="product-item column-direction">
-                <img src={product.thumbnail ?? ""} alt={product.product_name} className="product-thumbnail"/>
-                <div className="product-details full-width">
-                    <h4>
-                        {product.product_name} (
-                        {product.product_tags.length > 0 && product.product_tags.map((tag: string, index: number) => (
-                            <span className="light-small-text" style={{paddingLeft: '0.6rem'}} key={index}>{tag}</span>
-                        ))}
-                        )
-                    </h4>
-                    <p>Price: ${product.discount} <span className="text-styling-gray">(${product.price})</span></p>
-                    <p>Category: {product.category}</p>
-                    <p>{product.description}</p>
-                    <p>Rating: {product.rating}</p>
+                <CommonProduct product={product} />
                     {cartStore.cartStoreDetails.some((item: ICartType) => item.productDetail.id === product.id) ?
                         (
                             <button className="tertiary-button" onClick={handleDeleteCart}>
@@ -53,7 +41,6 @@ const Product = observer(({product, cartStore, deleteProduct, updateProduct}: {
                                 Add to Cart
                             </button>
                         )}
-                </div>
 
                 <div className="edit-product-order top-right-action-buttons">
                     <button className={"secondary-button"} style={{margin: "0 0.7rem"}}

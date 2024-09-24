@@ -14,7 +14,7 @@ interface ISelectFieldProps {
 class WrappedSelectField extends React.Component<ISelectFieldProps> {
     render() {
         return (
-            <select {...this.props} className="full-width" style={{padding:"0.3rem"}}>
+            <select {...this.props} className="full-width" style={{padding:"0.8rem"}}>
                 <option value="" hidden>{this.props?.default}</option>
                 {this.props.options.map((data: string, index: number) => (
                     <option key={index} value={data}>
