@@ -9,6 +9,7 @@ class WrappedNumberField extends React.Component<any> {
             <input
                 type="number"
                 {...this.props}
+                onWheel={ event => event.currentTarget.blur() }
             />
         );
     }

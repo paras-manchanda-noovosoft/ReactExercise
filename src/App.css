@@ -23,10 +23,17 @@ button {
 .search-box {
     width: 60%;
     padding: 0 0.5rem;
+    border-radius: 2px;
 }
 
 .dropdown-bar {
     margin-left: 2%;
+}
+
+.center-screen{
+    display: flex;
+    justify-content: center;
+    grid-column: 2;
 }
 
 .cart-icon {
@@ -43,7 +50,8 @@ button {
 .product-thumbnail {
     width: 150px;
     height: 150px;
-    margin: auto;
+    align-self: center;
+    margin-top: 7%;
 }
 
 .product-details {
@@ -300,7 +308,7 @@ tbody tr:last-of-type {
 
 .three-column-grid {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 1fr 1fr 1fr;
     overflow-x: hidden;
 }
 
@@ -317,6 +325,34 @@ tbody tr:last-of-type {
     width: 100%;
 }
 
+.quantity-widget {
+    display: flex;
+    gap:0.8rem;
+}
+
+.quantity-input {
+    width:40px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.increase-button,
+.decrease-button {
+    font-size: 1.5rem;
+    background-color: #007bff;
+    color:white;
+    border: none;
+    padding :0.1rem 0.5rem;
+}
+
+.increase-button:hover,
+.decrease-button:hover {
+    background-color: #0056b3;
+}
+
+
 
 @media screen and (min-width: 768px) and (max-width: 1200px) {
     .three-column-grid {
@@ -332,6 +368,8 @@ tbody tr:last-of-type {
         padding: 0.4rem 0.5rem;
     }
 }
+
+
 
 @media screen and (max-width: 768px) {
 

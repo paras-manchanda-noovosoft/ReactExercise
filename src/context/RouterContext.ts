@@ -3,5 +3,5 @@ import {initRouter} from "../Stores/RouterStore";
 
 const routerStore = initRouter();
 export const RootContext = createContext({
-    routerStore : routerStore
+    routerStore: routerStore
 });

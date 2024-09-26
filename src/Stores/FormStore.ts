@@ -27,9 +27,7 @@ export class FormStore {
 
     @action setData(data: any) {
         for (let key of Object.keys(data)) {
-            if (this.data.hasOwnProperty(key)) {
                 this.setInputFieldValue(key, data[key]);
-            }
         }
     }
 
@@ -42,7 +40,6 @@ export class FormStore {
     }
 
     @action validateField(fieldName: string, value: any, validate: IValidate) {
-
         let errorMessage: string | null = null;
 
         switch (typeof value) {
@@ -58,7 +55,16 @@ export class FormStore {
                 break;
             case 'object':
                 if (Array.isArray(value)) {
-                    if (value.length === 0 || value.some(item => item.length === 0)) {
+                    if(fieldName === 'productReviews'){
+                        value.forEach((item: any, index: number) => {
+                            if (!item || (typeof item === 'string' && item.trim().length === 0)) {
+                                this.errors[`${fieldName}[${index}]`] = 'This is required !!!';
+                            } else {
+                                delete this.errors[`${fieldName}[${index}]`];
+                            }
+                        });
+                    }
+                    else if (value.length === 0 || value.some(item => item.length === 0)) {
                         errorMessage = 'This is required !!!';
                     }
                 }

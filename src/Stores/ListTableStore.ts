@@ -56,7 +56,6 @@ class ListTableStore<T> {
             const {total, items} = processDataCallback(rawData);
             this.setTotalPages(total);
             this.setData(items);
-            console.log(items);
         } catch (error) {
             console.error('Failed to fetch data:', error);
         }

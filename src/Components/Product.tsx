@@ -1,56 +1,73 @@
+import React, {Component} from 'react';
 import {observer} from 'mobx-react';
-import React from 'react';
 import {IProduct} from "../Types/ProductTypes";
 import {ICartType} from "../Stores/CartStore";
-import {useRouterStore} from "mobx-state-router";
+import { action} from "mobx";
+import {RootContext} from "../context/RouterContext";
 import CommonProduct from "./CommonProduct";
+import QuantityWidget from "./QuantityWidgets";
 
-const Product = observer(({product, cartStore, deleteProduct}: {
-    product: IProduct,
-    cartStore: any,
-    deleteProduct: (a: number) => void
-}) => {
-    const routerStore = useRouterStore();
-    const handleAddCart = () => {
-        cartStore.addToCart(product);
+interface IProductProps {
+    product: IProduct;
+    cartStore: any;
+    deleteProduct: (a: number) => void;
+}
+
+@observer
+class Product extends Component<IProductProps> {
+    static contextType = RootContext;
+    context!: React.ContextType<typeof RootContext>;
+    routerStore: any;
+
+    constructor(props: IProductProps) {
+        super(props);
     }
 
-    const handleDeleteCart = () => {
-        cartStore.deleteFromCart(product.id);
+    componentDidMount() {
+        this.routerStore = this.context.routerStore;
     }
 
-    const deleteFromProduct = () => {
-        deleteProduct(product.id);
+    @action handleAddCart = () => {
+        this.props.cartStore.addToCart(this.props.product);
+    }
+    @action deleteFromProduct = () => {
+        this.props.deleteProduct(this.props.product.id);
     }
 
-    const updateFromProduct = () => {
-        routerStore.goTo('NewProductPage', {params: {productId: product.id.toString()}}).then();
+    @action updateFromProduct = () => {
+        this.routerStore.goTo('NewProductPage', {
+            params: {productId: this.props.product.id.toString()}
+        }).then();
     }
 
-    return (
-        <>
+
+    render() {
+        const {product, cartStore} = this.props;
+
+        return (
             <div className="product-item column-direction">
-                <CommonProduct product={product} />
-                    {cartStore.cartStoreDetails.some((item: ICartType) => item.productDetail.id === product.id) ?
-                        (
-                            <button className="tertiary-button" onClick={handleDeleteCart}>
-                                Remove from Cart
-                            </button>
-                        ) : (
-                            <button className="primary-button" onClick={handleAddCart}>
-                                Add to Cart
-                            </button>
-                        )}
+                <CommonProduct product={product}/>
+
+                {cartStore.cartStoreDetails.some((item: ICartType) => item.id === product.id) ? (
+                    <QuantityWidget
+                        cartStore={cartStore}
+                        id={product.id}
+                    />
+                ) : (
+                    <button className="primary-button" onClick={this.handleAddCart}>
+                        Add to Cart
+                    </button>
+                )}
 
                 <div className="edit-product-order top-right-action-buttons">
-                    <button className={"secondary-button"} style={{margin: "0 0.7rem"}}
-                            onClick={updateFromProduct}> Edit
+                    <button className="secondary-button" style={{margin: "0 0.7rem"}} onClick={this.updateFromProduct}>
+                        Edit
                     </button>
-                    <button className={"tertiary-button"} onClick={deleteFromProduct}> Delete</button>
+                    <button className="tertiary-button" onClick={this.deleteFromProduct}>Delete</button>
                 </div>
             </div>
-        </>
-    )
-});
+        );
+    }
+}
 
 export default Product;

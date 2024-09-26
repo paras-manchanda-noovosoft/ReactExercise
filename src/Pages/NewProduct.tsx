@@ -35,7 +35,7 @@ class Product {
     id: number = 0;
     isDeleted: boolean = false;
     productType: string = "";
-    dynamicFields: string = "";
+    productReviews: string[] = [];
 }
 
 
@@ -82,12 +82,14 @@ export class NewProduct extends React.Component <INewProductProps, INewProductSt
         }
     }
 
-    handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    @action handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
         e.preventDefault();
         if (this.formStore.validate()) {
             if (this.props.productStore) {
                 try {
                     if (this.isEditMode) {
+
                         this.props.productStore.updateProduct(this.formStore.formData);
                     } else {
                         let localId = JSON.parse(localStorage.getItem('id') || '195');
@@ -102,15 +104,13 @@ export class NewProduct extends React.Component <INewProductProps, INewProductSt
             await this.context.routerStore.goTo('HomePage');
         }
     };
-    handleCategoryChange = (category: string): void => {
-        this.formStore.setInputFieldValue("category", category);
-    };
 
     render() {
         return (
             <>
                 <div>
-                    <button className="go-back-from-cart margin-screen" onClick={() => this.routerStore.goTo('HomePage')}>Go back
+                    <button className="go-back-from-cart margin-screen"
+                            onClick={() => this.routerStore.goTo('HomePage')}>Go back
                     </button>
                     <div className="add-cart-page">
                         <h2>{this.isEditMode ? 'Edit Product' : 'Add a New Product'}</h2>
@@ -152,6 +152,7 @@ export class NewProduct extends React.Component <INewProductProps, INewProductSt
                                 />
 
                                 <CheckField
+                                    component={<input type="text"/>}
                                     formStore={this.formStore}
                                     name="product_tags"
                                     label="Product Tags"
@@ -161,9 +162,11 @@ export class NewProduct extends React.Component <INewProductProps, INewProductSt
 
                                 <DynamicField
                                     formStore={this.formStore}
-                                    name="dynamic_fields"
-                                    label="Dynamic Fields"
+                                    name="productReviews"
+                                    label="Product Reviews"
+                                    inputLabel="Review"
                                     required={true}
+                                    inputComponent={<StringField/>}
                                 />
 
                                 <TextAreaField

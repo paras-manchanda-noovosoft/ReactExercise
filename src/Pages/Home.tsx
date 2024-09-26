@@ -32,7 +32,7 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
     }
 
     const deleteProduct = async (id: number) => {
-        if (cartStore.cartStoreDetails.some((item: ICartType) => item.productDetail.id === id)) {
+        if (cartStore.cartStoreDetails.some((item: ICartType) => item.id === id)) {
             cartStore.deleteFromCart(id);
         }
 
@@ -40,13 +40,13 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
             let products = JSON.parse(localStorage.getItem("products") || "[]");
             if (products.some((product: IProduct) => product.id === id)) {
                 products = products.filter((product: IProduct) => product.id !== id);
-            } else {
-                const prod = productStore.getProductById(id.toString());
-                if (prod) {
-                    prod.isDeleted = true;
-                    products.push(prod);
-                }
             }
+            const prod = productStore.getProductById(id.toString());
+            if (prod) {
+                prod.isDeleted = true;
+                products.push(prod);
+            }
+
 
             localStorage.setItem("products", JSON.stringify(products));
             productStore.productDetails = productStore.productDetails.filter((product) => product.id !== id);
@@ -70,10 +70,27 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
     };
 
     useEffect(() => {
-        userStore.setUserDetails().then();
-        categoryStore.setCategoryDetails().then();
-        productStore.setProductDetails().then();
+        productStore.search = "";
+        productStore.category="all";
+        const fetchData = async () => {
+
+            await userStore.setUserDetails();
+            await categoryStore.setCategoryDetails();
+            await productStore.setProductDetails();
+        };
+
+        const loadCartDetails = async () => {
+            await fetchData();
+
+            const localCartDetails = JSON.parse(localStorage.getItem('cart_details') as string) || [];
+            if (localCartDetails.length === 0) {
+                await cartStore.setCartDetails({ allProducts: productStore.productDetails });
+            }
+        };
+
+        loadCartDetails().then();
     }, []);
+
 
     return (
         <>
@@ -102,16 +119,26 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
             </div>
 
             <div>
-                <h1 style={{textAlign: "center", fontSize: "1.3rem"}}>Product List</h1>
                 <div className="three-column-grid">
                     {productStore.productDetails.length === 0 ? (
-                        <p>No products exist for the current search criteria.</p>
+
+                        productStore.search.length > 0 || productStore.category.length > 0 ? (
+                            <div className="center-screen">
+                                <p>No products Found.</p>
+                            </div>
+                        ) : (
+
+                            <div className="center-screen">
+                                <p>Loading Products .... </p>
+                            </div>
+                        )
                     ) : (
                         productStore.productDetails.map((product: IProduct) => (
                             <Product key={product.id} product={product} cartStore={cartStore}
                                      deleteProduct={deleteProduct}/>
                         ))
                     )}
+
                 </div>
             </div>
         </>

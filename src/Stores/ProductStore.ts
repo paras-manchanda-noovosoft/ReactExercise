@@ -59,15 +59,18 @@ export class ProductStore {
     async setProductDetails(category?: string, search?: string) {
         let products = JSON.parse(localStorage.getItem("products") || "[]");
         let localStoredProducts: IProduct[] = products.filter((product: IProduct) => !product.isDeleted);
-
         if (category && category !== 'all') {
             localStoredProducts = localStoredProducts.filter((product: IProduct) => product.category === category);
+        }
+
+        if (search) {
+            localStoredProducts = localStoredProducts.filter((product: IProduct) => product.product_name.startsWith(search));
         }
 
         try {
             const apiResponse = await this.fetchProductDetails(category === 'all' ? undefined : category, search);
             const apiProducts: IProduct[] = apiResponse.filter((product: IProduct) =>
-                !localStoredProducts.some((localProduct: IProduct) => localProduct.id === product.id)
+                !products.some((localProduct: IProduct) => localProduct.id === product.id || (localProduct.id === product.id && localProduct.isDeleted))
             );
 
             this.productDetails = [...localStoredProducts, ...apiProducts];
@@ -87,7 +90,6 @@ export class ProductStore {
         this.category = str;
         this.setProductDetails(str, this.search).then();
     }
-
 
     getProductById(id: string) {
         return this.productDetails.find((product: IProduct) => product.id === +id);
@@ -110,7 +112,7 @@ export class ProductStore {
         } else {
             this.productDetails.push(product);
         }
-        let products = JSON.parse(localStorage.getItem("products") || "[]");
+        let products = JSON.parse(localStorage.getItem("products") as string) || [];
         const index = products.findIndex((existingProduct: IProduct) => existingProduct.id === product.id);
         if (index !== -1) {
             products[index] = product;
