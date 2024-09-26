@@ -71,7 +71,7 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
 
     useEffect(() => {
         productStore.search = "";
-        productStore.category="all";
+        productStore.category="";
         const fetchData = async () => {
 
             await userStore.setUserDetails();
@@ -105,7 +105,7 @@ export const Home = observer(({productStore, userStore, categoryStore, cartStore
                     <CategoryDropDown categoryData={categoryStore.categoryList} onSelect={handleCategoryChange}/>}
                 <div className="user-cart">
                     <p>{userStore.user}</p>
-                    <button onClick={() => routerStore.goTo('CartPage')}>
+                    <button onClick={() => routerStore.goTo('CartPage')} className="self-center">
                         <FontAwesomeIcon className="cart-icon" icon={faCartShopping}/>
                         {cartStore.cartStoreDetails.length}
                     </button>

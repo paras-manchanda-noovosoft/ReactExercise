@@ -12,11 +12,13 @@ import {Home} from "./Pages/Home";
 import {NewProduct} from './Pages/NewProduct';
 import PostPage from "./Pages/PostPage";
 import GridExercisePage from './Pages/GridExercisePage';
+import {ApiService} from "./Api/ApiService";
 
 const productStore = new ProductStore();
 const userStore = new UserStore();
 const categoryStore = new CategoryStore();
 const cartStore = new Cartstore();
+const apiService=new ApiService();
 
 export const viewMap = {
     CartPage: <Cart cartStore={cartStore} userStore={userStore}/>,

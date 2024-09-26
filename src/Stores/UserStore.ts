@@ -1,7 +1,10 @@
 import { action, observable, makeAutoObservable } from "mobx";
+import {ApiService} from "../Api/ApiService";
+
 
 export class UserStore {
     @observable user: string = "";
+    apiService = new ApiService();
 
     constructor() {
         makeAutoObservable(this);
@@ -11,9 +14,8 @@ export class UserStore {
     @action
     async setUserDetails() {
         try {
-            const userData = await fetch('https://dummyjson.com/users/1');
-            const data = await userData.json();
-            this.user = `${data.firstName} ${data.lastName}`;
+            const userData = await this.apiService.get('https://dummyjson.com/users/1');
+            this.user = `${userData.firstName} ${userData.lastName}`;
             localStorage.setItem('user', this.user);
         } catch (error) {
             console.error("Error fetching user details:", error);

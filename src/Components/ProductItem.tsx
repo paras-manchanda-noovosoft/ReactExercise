@@ -1,6 +1,6 @@
 import React from "react";
 
-class CommonProduct extends React.Component<any> {
+class ProductItem extends React.Component<any> {
     render() {
         const product = this.props.product;
         return (
@@ -24,4 +24,4 @@ class CommonProduct extends React.Component<any> {
     }
 }
 
-export default CommonProduct;
+export default ProductItem;

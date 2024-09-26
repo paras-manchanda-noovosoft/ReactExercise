@@ -1,10 +1,13 @@
-import {action, makeAutoObservable, observable} from "mobx";
+import { action, makeAutoObservable, observable } from "mobx";
+import {ApiService} from "../Api/ApiService";
 
 export class CategoryStore {
     @observable categoryList: string[] = [];
     @observable loading: boolean = true;
+    apiService: ApiService;
 
     constructor() {
+        this.apiService = new ApiService();
         makeAutoObservable(this);
     }
 
@@ -12,8 +15,8 @@ export class CategoryStore {
     async fetchCategoryDetails() {
         this.loading = true;
         try {
-            const response = await fetch('https://dummyjson.com/products/category-list');
-            return await response.json();
+            const response = await this.apiService.get('https://dummyjson.com/products/category-list');
+            return response;
         } catch (error) {
             console.error("Error fetching category details:", error);
         } finally {

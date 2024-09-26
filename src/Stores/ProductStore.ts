@@ -1,12 +1,14 @@
-import {IFetchProductData, IProduct} from "../Types/ProductTypes";
-import {action, observable, makeAutoObservable} from "mobx";
+import { IFetchProductData, IProduct } from "../Types/ProductTypes";
+import { action, observable, makeAutoObservable } from "mobx";
+import {ApiService} from "../Api/ApiService";
 
 export class ProductStore {
-    baseUrl: string = 'https://dummyjson.com/products';
+    baseurl="https://dummyjson.com/products";
     @observable search = "";
     @observable category = "";
     @observable productDetails: IProduct[] = [];
     @observable loading: boolean = true;
+    apiService = new ApiService();
 
     constructor() {
         makeAutoObservable(this);
@@ -18,17 +20,13 @@ export class ProductStore {
         let fetchUrl: string;
 
         if (search) {
-            fetchUrl = `${this.baseUrl}/search?q=${search}`;
+            fetchUrl = `/search?q=${search}`;
         } else {
-            fetchUrl = `${this.baseUrl}?limit=0`;
+            fetchUrl = '?limit=0';
         }
 
         try {
-            const response = await fetch(fetchUrl, {method: 'GET'});
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const productData = await response.json();
+            const productData = await this.apiService.get(`${this.baseurl}${fetchUrl}`);
             let allSearchProducts: IProduct[] = productData["products"].map((data: IFetchProductData) => ({
                 product_name: data.title,
                 product_tags: data.tags,
@@ -59,6 +57,7 @@ export class ProductStore {
     async setProductDetails(category?: string, search?: string) {
         let products = JSON.parse(localStorage.getItem("products") || "[]");
         let localStoredProducts: IProduct[] = products.filter((product: IProduct) => !product.isDeleted);
+
         if (category && category !== 'all') {
             localStoredProducts = localStoredProducts.filter((product: IProduct) => product.category === category);
         }

@@ -28,8 +28,14 @@ button {
 
 .dropdown-bar {
     margin-left: 2%;
+    border-radius: 2px;
 }
 
+.self-center{
+    align-self: center;
+    background-color: #0056b3;
+    color:white;
+}
 .center-screen{
     display: flex;
     justify-content: center;

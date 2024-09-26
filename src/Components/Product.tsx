@@ -4,7 +4,7 @@ import {IProduct} from "../Types/ProductTypes";
 import {ICartType} from "../Stores/CartStore";
 import { action} from "mobx";
 import {RootContext} from "../context/RouterContext";
-import CommonProduct from "./CommonProduct";
+import ProductItem from "./ProductItem";
 import QuantityWidget from "./QuantityWidgets";
 
 interface IProductProps {
@@ -46,7 +46,7 @@ class Product extends Component<IProductProps> {
 
         return (
             <div className="product-item column-direction">
-                <CommonProduct product={product}/>
+                <ProductItem product={product}/>
 
                 {cartStore.cartStoreDetails.some((item: ICartType) => item.id === product.id) ? (
                     <QuantityWidget

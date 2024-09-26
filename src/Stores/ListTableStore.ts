@@ -1,4 +1,5 @@
-import {action, makeAutoObservable, observable, runInAction} from 'mobx';
+import { action, makeAutoObservable, observable } from 'mobx';
+import {ApiService} from "../Api/ApiService";
 
 class ListTableStore<T> {
     @observable data: T[] = [];
@@ -7,10 +8,12 @@ class ListTableStore<T> {
     @observable currentPage: number = 1;
     @observable totalPages: number = 0;
     @observable itemsPerPage: number = 10;
-    apiUrl: string;
+    apiService: ApiService;
+    baseUrl: string;
 
     constructor(apiUrl: string) {
-        this.apiUrl = apiUrl;
+        this.apiService = new ApiService();
+        this.baseUrl = apiUrl;
         makeAutoObservable(this);
     }
 
@@ -51,9 +54,8 @@ class ListTableStore<T> {
     @action
     async fetchData(processDataCallback: (response: any) => { total: number; items: T[] }) {
         try {
-            const response = await fetch(`${this.apiUrl}?limit=${this.itemsPerPage}&skip=${(this.currentPage - 1) * this.itemsPerPage}`);
-            const rawData = await response.json();
-            const {total, items} = processDataCallback(rawData);
+            const rawData = await this.apiService.get(`${this.baseUrl}?limit=${this.itemsPerPage}&skip=${(this.currentPage - 1) * this.itemsPerPage}`);
+            const { total, items } = processDataCallback(rawData);
             this.setTotalPages(total);
             this.setData(items);
         } catch (error) {
@@ -64,9 +66,8 @@ class ListTableStore<T> {
     @action
     async fetchSearch(processDataCallback: (response: any) => { total: number; items: T[] }) {
         try {
-            const response = await fetch(`${this.apiUrl}/search?q=${this.search}&limit=${this.itemsPerPage}`);
-            const rawData = await response.json();
-            const {total, items} = processDataCallback(rawData);
+            const rawData = await this.apiService.get(`/search?q=${this.search}&limit=${this.itemsPerPage}`);
+            const { total, items } = processDataCallback(rawData);
             this.setTotalPages(total);
             this.setData(items);
         } catch (error) {

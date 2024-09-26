@@ -89,7 +89,6 @@ export class NewProduct extends React.Component <INewProductProps, INewProductSt
             if (this.props.productStore) {
                 try {
                     if (this.isEditMode) {
-
                         this.props.productStore.updateProduct(this.formStore.formData);
                     } else {
                         let localId = JSON.parse(localStorage.getItem('id') || '195');
